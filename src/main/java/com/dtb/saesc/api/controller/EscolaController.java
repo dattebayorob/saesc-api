@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,8 @@ public class EscolaController {
 	private EscolaService escolaService;
 	@Autowired
 	private LinkService escolaLinkService;
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@GetMapping
 	public ResponseEntity<Response<Page<EscolaDto>>> buscarEscolas(
@@ -62,23 +65,13 @@ public class EscolaController {
 		return ResponseEntity.ok(response);
 	}
 	private EscolaDto converterEscolaParaDto(Escola escola) {
-		EscolaDto escolaDto = new EscolaDto();
-		escolaDto.setId(Optional.of(escola.getId()));
-		escolaDto.setNome(escola.getNome());
+		EscolaDto escolaDto = modelMapper.map(escola, EscolaDto.class);
 		List<Link> links = escolaLinkService.buscarPorescola(escola);
 		links.forEach(link -> escolaDto.getIps().add(link.getProvedor().getNome()+" - "+link.getIp()));
 		return escolaDto;
 	}
 	private LinkDto converterLinksParaDto(Link escolaLink) {
-		LinkDto linkDto = new LinkDto();
-		linkDto.setCircuito(escolaLink.getCircuito());
-		linkDto.setId(Optional.ofNullable(escolaLink.getId()));
-		//linkDto.setIdEscola(escolaLink.getEscola().getId());
-		linkDto.setEscolaNome(escolaLink.getEscola().getNome());
-		linkDto.setIp(escolaLink.getIp());
-		//linkDto.setProvedor(escolaLink.getProvedor());
-		linkDto.setProvedorNome(escolaLink.getProvedor().getNome());
-		linkDto.setStatus(escolaLink.getStatus());
+		LinkDto linkDto = modelMapper.map(escolaLink, LinkDto.class);
 		return linkDto;
 	}
 }
