@@ -67,7 +67,8 @@ public class EscolaController {
 	private EscolaDto converterEscolaParaDto(Escola escola) {
 		EscolaDto escolaDto = modelMapper.map(escola, EscolaDto.class);
 		List<Link> links = escolaLinkService.buscarPorescola(escola);
-		links.forEach(link -> escolaDto.getIps().add(link.getProvedor().getNome()+" - "+link.getIp()));
+		links.forEach(link -> escolaDto.getLinksIp().add(
+				link.getProvedor().getNome()+" - "+link.getIp()));
 		return escolaDto;
 	}
 	private LinkDto converterLinksParaDto(Link escolaLink) {

@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class EscolaDto {
-	private Optional<Long> id;
+	private Long id;
 	private String prefixo;
 	private String nome;
-	private List<String> ips;
+	private List<String> linksIp;
 	private String crede;
 	private String rua;
 	private String bairro;
 	private String telefone;
-	public Optional<Long> getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Optional<Long> id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getPrefixo() {
@@ -31,14 +31,15 @@ public class EscolaDto {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public List<String> getIps() {
-		if(this.ips == null) {
-			this.ips = new ArrayList<>();
+	
+	public List<String> getLinksIp() {
+		if(this.linksIp == null) {
+			this.linksIp = new ArrayList<>();
 		}
-		return ips;
+		return linksIp;
 	}
-	public void setIps(List<String> ips) {
-		this.ips = ips;
+	public void setLinksIp(List<String> linksIp) {
+		this.linksIp = linksIp;
 	}
 	public String getCrede() {
 		return crede;

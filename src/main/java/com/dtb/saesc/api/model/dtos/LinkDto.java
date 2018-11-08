@@ -1,13 +1,11 @@
 package com.dtb.saesc.api.model.dtos;
 
-import java.util.Optional;
-
 import javax.validation.constraints.NotEmpty;
 
 
 public class LinkDto {
 	
-	private Optional<Long> id;
+	private Long id;
 	@NotEmpty(message="Endereço ip do link deve ser informado.")
 	private String ip;
 	@NotEmpty(message="Provedor deve ser informado.")
@@ -16,10 +14,10 @@ public class LinkDto {
 	private String status;
 	@NotEmpty(message="Escola deve ser informada.")
 	private String escolaNome;
-	public Optional<Long> getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Optional<Long> id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getIp() {
