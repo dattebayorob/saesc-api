@@ -1,10 +1,12 @@
 package com.dtb.saesc.api.controller;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,57 +26,60 @@ import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.ProvedorService;
 
 @RestController
-@RequestMapping(value="/links/provedor")
-@CrossOrigin(value="*")
+@RequestMapping(value = "/links/provedor")
+@CrossOrigin(value = "*")
 public class ProvedorController {
-	
+
 	@Autowired
 	private ProvedorService provedorService;
 	@Autowired
 	private ModelMapper modelMapper;
-	private static Response<ProvedorDto> response = new Response<>();
-	
+
 	@PostMapping
-	public ResponseEntity<Response<ProvedorDto>> adicionar(@Valid @RequestBody ProvedorDto provedorDto,BindingResult result){
+	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
 		Provedor provedor = converterDtoParaProvedor(provedorDto);
-		if(result.hasErrors()) {
-			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(valida(result));
 		}
 		provedorService.persistir(provedor);
-		response.setData(provedorDto = converterProvedorParaDto(provedor));
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor)));
 	}
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<ProvedorDto>> buscarPeloId(@PathVariable("id") Long id){
+	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if(!provedor.isPresent()) {
+		if (!provedor.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		ProvedorDto provedorDto = modelMapper.map(provedor.get(), ProvedorDto.class);
-		response.setData(provedorDto);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor.get())));
 	}
+
+	private Response valida(BindingResult result) {
+		Response response = new Response();
+		result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+		return response;
+	}
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Response<ProvedorDto>> atualizarPeloId(@PathVariable("id") Long id, @Valid @RequestBody ProvedorDto provedorDto,BindingResult result){
+	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,
+			@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
 		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if(!provedor.isPresent()) {
+		if (!provedor.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		if(result.hasErrors()) {
-			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(valida(result));
 		}
 		provedorDto.setId(id);
 		Provedor provedorSalvo = converterDtoParaProvedor(provedorDto);
 		provedorService.persistir(provedorSalvo);
-		response.setData(provedorDto);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(Response.data(provedorDto));
 	}
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ProvedorDto> removerPeloId(@PathVariable("id") Long id){
+	public ResponseEntity<Response> removerPeloId(@PathVariable("id") Long id) {
 		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if(!provedor.isPresent()) {
+		if (!provedor.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		provedorService.removerPeloId(id);

@@ -3,21 +3,27 @@ package com.dtb.saesc.api.model.response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Response<T> {
-	private T data;
+public class Response {
+	private Object data;
 	private List<String> errors;
 	public Response() {
 		// TODO Auto-generated constructor stub
 	}
-	public T getData() {
+	public Response(Object data) {
+		this.data = data;
+	}
+	public static Response data(Object data) {
+		return new Response(data);
+	}
+	public Object getData() {
 		return data;
 	}
-	public void setData(T data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 	public List<String> getErrors() {
-		if(errors == null) {
-			this.errors = new ArrayList<String>();
+		if(this.errors==null) {
+			this.errors = new ArrayList<>();
 		}
 		return errors;
 	}

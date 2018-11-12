@@ -1,4 +1,4 @@
-package com.dtb.saesc.api.controller;
+/*package com.dtb.saesc.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,3 +76,4 @@ public class EscolaController {
 		return linkDto;
 	}
 }
+*/
