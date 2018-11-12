@@ -37,12 +37,12 @@ public class ProvedorController {
 
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
-		Provedor provedor = converterDtoParaProvedor(provedorDto);
+		Provedor provedor = converterDtoParaProvedor(provedorDto, new Provedor());
 		if (result.hasErrors()) {
-			return ResponseEntity.badRequest().body(valida(result));
+			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		provedorService.persistir(provedor);
-		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor)));
+		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor,provedorDto)));
 	}
 
 	@GetMapping("/{id}")
@@ -51,28 +51,23 @@ public class ProvedorController {
 		if (!provedor.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor.get())));
+		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor.get(),new ProvedorDto())));
 	}
 
-	private Response valida(BindingResult result) {
-		Response response = new Response();
-		result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-		return response;
-	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,
 			@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
-		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if (!provedor.isPresent()) {
+		Optional<Provedor> provedorById = provedorService.buscarPeloId(id);
+		if (!provedorById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		if (result.hasErrors()) {
-			return ResponseEntity.badRequest().body(valida(result));
+			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		provedorDto.setId(id);
-		Provedor provedorSalvo = converterDtoParaProvedor(provedorDto);
-		provedorService.persistir(provedorSalvo);
+		Provedor provedor = converterDtoParaProvedor(provedorDto, provedorById.get());
+		provedorService.persistir(provedor);
 		return ResponseEntity.ok(Response.data(provedorDto));
 	}
 
@@ -86,11 +81,14 @@ public class ProvedorController {
 		return ResponseEntity.noContent().build();
 	}
 
-	private ProvedorDto converterProvedorParaDto(Provedor provedor) {
-		return modelMapper.map(provedor, ProvedorDto.class);
+	private ProvedorDto converterProvedorParaDto(Provedor provedor, ProvedorDto provedorDto) {
+		modelMapper.map(provedor, provedorDto);
+		return provedorDto;
 	}
 
-	private Provedor converterDtoParaProvedor(ProvedorDto provedorDto) {
-		return modelMapper.map(provedorDto, Provedor.class);
+	private Provedor converterDtoParaProvedor(ProvedorDto provedorDto, Provedor provedor) {
+		modelMapper.map(provedorDto, provedor);
+		return provedor;
 	}
+
 }
