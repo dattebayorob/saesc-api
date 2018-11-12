@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.entities.Link;
 import com.dtb.saesc.api.model.repositories.LinkRepository;
 import com.dtb.saesc.api.services.LinkService;
@@ -17,8 +16,8 @@ public class LinkServiceImpl implements LinkService{
 	private LinkRepository escolaLinkRepository;
 	
 	@Override
-	public List<Link> buscarPorescola(Escola escola) {
-		return escolaLinkRepository.findByEscola(escola);
+	public List<Link> buscarPorescola(Long id) {
+		return escolaLinkRepository.findByEscolaId(id);
 	}
 	
 }
