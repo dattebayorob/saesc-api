@@ -1,8 +1,9 @@
-/*package com.dtb.saesc.api.controller;
+package com.dtb.saesc.api.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +12,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dtb.saesc.api.model.dtos.EscolaDto;
-import com.dtb.saesc.api.model.dtos.LinkDto;
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.entities.Link;
 import com.dtb.saesc.api.model.response.Response;
-import com.dtb.saesc.api.services.LinkService;
 import com.dtb.saesc.api.services.EscolaService;
+import com.dtb.saesc.api.services.LinkService;
 
 @RestController
-@RequestMapping(value="/escolas")
-@CrossOrigin(value="*")
+@RequestMapping(value = "/escolas")
+@CrossOrigin(value = "*")
 public class EscolaController {
 	@Autowired
 	private EscolaService escolaService;
@@ -36,44 +40,84 @@ public class EscolaController {
 	private LinkService escolaLinkService;
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@GetMapping
-	public ResponseEntity<Response<Page<EscolaDto>>> buscarEscolas(
-			@RequestParam(value = "page", defaultValue = "0") int page,
+	public ResponseEntity<Response> buscarEscolas(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "order", defaultValue = "id") String order,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir
-			){
-		Response<Page<EscolaDto>> response = new Response<>();
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir) {
 		PageRequest pageRequest = PageRequest.of(page, 10, Direction.valueOf(dir), order);
 		Page<Escola> escolas = escolaService.buscarTodas(pageRequest);
-		Page<EscolaDto> escolasDto = escolas.map(escolaDto -> converterEscolaParaDto(escolaDto));
-		response.setData(escolasDto);
-		return ResponseEntity.ok(response);
+		Page<EscolaDto> escolasDto = escolas.map(escola -> converterEscolaParaDto(escola, new EscolaDto()));
+		return ResponseEntity.ok(Response.data(escolasDto));
 	}
-	
-	@GetMapping("/{id}/links")
-	public ResponseEntity<Response<List<LinkDto>>> buscarEscolaLinks(@PathVariable("id") Long idEscola){
-		Response<List<LinkDto>> response = new Response<>();
-		Optional<Escola> escola = escolaService.buscarPeloId(idEscola);
-		if(!escola.isPresent()) {
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
+		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
+		if (!escolaPeloId.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		List<Link> ips = escolaLinkService.buscarPorescola(escola.get());
-		List<LinkDto> ipsDto = new ArrayList<>();
-		ips.forEach(ip -> ipsDto.add(converterLinksParaDto(ip)));
-		response.setData(ipsDto);
-		return ResponseEntity.ok(response);
+		EscolaDto escolaDto = converterEscolaParaDto(escolaPeloId.get(), new EscolaDto());
+		return ResponseEntity.ok(Response.data(escolaDto));
+
 	}
-	private EscolaDto converterEscolaParaDto(Escola escola) {
-		EscolaDto escolaDto = modelMapper.map(escola, EscolaDto.class);
-		List<Link> links = escolaLinkService.buscarPorescola(escola);
-		links.forEach(link -> escolaDto.getLinksIp().add(
-				link.getProvedor().getNome()+" - "+link.getIp()));
+
+	@PostMapping
+	public ResponseEntity<Response> adicionar(@Valid @RequestBody EscolaDto escolaDto, BindingResult result) {
+		Escola escola = converterDtoParaEscola(escolaDto, new Escola());
+		validaEscolaInep(escola.getInep(), result);
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
+		}
+		escola = escolaService.persistir(escola);
+		escolaDto = converterEscolaParaDto(escola, escolaDto);
+		return ResponseEntity.ok(Response.data(escolaDto));
+
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Valid @RequestBody EscolaDto escolaDto,
+			BindingResult result) {
+		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
+		if (!escolaPeloId.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		Escola escola = validaEAtualizaEscola(escolaPeloId.get(), escolaDto, result);
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
+		}
+		escolaService.persistir(escola);
+		escolaDto = converterEscolaParaDto(escola, escolaDto);
+		return ResponseEntity.ok(Response.data(escolaDto));
+	}
+
+	private Escola validaEAtualizaEscola(Escola escola, EscolaDto escolaDto, BindingResult result) {
+		if (!escola.getInep().equals(escolaDto.getInep())) {
+			validaEscolaInep(escolaDto.getInep(), result);
+		}
+		// Não sei porque diabos o id não é mapeado no modellmapper ver depois isso.
+		escolaDto.setId(escola.getId());
+		return converterDtoParaEscola(escolaDto, escola);
+	}
+
+	private void validaEscolaInep(String inep, BindingResult result) {
+		Optional<Escola> escolaPeloInep = escolaService.buscarPeloInep(inep);
+		if (escolaPeloInep.isPresent()) {
+			result.addError(new ObjectError("escola", "Escola já cadastrada com o inep informado"));
+		}
+
+	}
+
+	private Escola converterDtoParaEscola(EscolaDto escolaDto, Escola escola) {
+		modelMapper.map(escolaDto, escola);
+		return escola;
+	}
+
+	private EscolaDto converterEscolaParaDto(Escola escola, EscolaDto escolaDto) {
+		modelMapper.map(escola, escolaDto);
+		List<Link> links = escolaLinkService.buscarPorescola(escola.getId());
+		links.forEach(link -> escolaDto.getLinksIp().add(link.getProvedor().getNome() + " - " + link.getIp()));
 		return escolaDto;
 	}
-	private LinkDto converterLinksParaDto(Link escolaLink) {
-		LinkDto linkDto = modelMapper.map(escolaLink, LinkDto.class);
-		return linkDto;
-	}
+
 }
-*/

@@ -31,6 +31,7 @@ public class Escola {
 	private PrefixoEnum prefixo;
 	@Column(nullable = false)
 	private String nome;
+	@Column(nullable = false, unique = true)
 	private String inep;
 	@Enumerated(EnumType.STRING)
 	private CredeEnum crede;

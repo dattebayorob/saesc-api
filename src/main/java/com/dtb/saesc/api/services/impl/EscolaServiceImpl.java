@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Escola;
@@ -27,6 +26,16 @@ public class EscolaServiceImpl implements EscolaService {
 	@Override
 	public Page<Escola> buscarTodas(PageRequest pageRequest) {
 		return escolaRepository.findAll(pageRequest);
+	}
+
+	@Override
+	public Optional<Escola> buscarPeloInep(String inep) {
+		return escolaRepository.findByInep(inep);
+	}
+
+	@Override
+	public Escola persistir(Escola escola) {
+		return escolaRepository.save(escola);
 	}
 
 }

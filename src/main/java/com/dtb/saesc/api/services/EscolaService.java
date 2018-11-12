@@ -12,4 +12,6 @@ public interface EscolaService {
 	//public Optional<Escola> buscarPeloInep(String inep);
 	public Optional<Escola> buscarPeloId(Long id);
 	public Page<Escola> buscarTodas(PageRequest pageRequest);
+	public Optional<Escola> buscarPeloInep(String inep);
+	public Escola persistir(Escola escola);
 }
