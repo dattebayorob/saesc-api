@@ -1,12 +1,9 @@
 package com.dtb.saesc.api.controller;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.ProvedorDto;
 import com.dtb.saesc.api.model.entities.Provedor;
 import com.dtb.saesc.api.model.response.Response;
@@ -33,25 +31,25 @@ public class ProvedorController {
 	@Autowired
 	private ProvedorService provedorService;
 	@Autowired
-	private ModelMapper modelMapper;
+	private EntityDtoConverter<ProvedorDto, Provedor> converter;
 
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
-		Provedor provedor = converterDtoParaProvedor(provedorDto, new Provedor());
+		Provedor provedor = converter.toEntity(provedorDto, new Provedor());
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		provedorService.persistir(provedor);
-		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor,provedorDto)));
+		return ResponseEntity.ok(Response.data(converter.toDto(provedor, provedorDto)));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
-		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if (!provedor.isPresent()) {
+		Optional<Provedor> provedorById = provedorService.buscarPeloId(id);
+		if (!provedorById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(Response.data(converterProvedorParaDto(provedor.get(),new ProvedorDto())));
+		return ResponseEntity.ok(Response.data(converter.toDto(provedorById.get(),new ProvedorDto())));
 	}
 
 
@@ -66,7 +64,7 @@ public class ProvedorController {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		provedorDto.setId(id);
-		Provedor provedor = converterDtoParaProvedor(provedorDto, provedorById.get());
+		Provedor provedor = converter.toEntity(provedorDto, provedorById.get());
 		provedorService.persistir(provedor);
 		return ResponseEntity.ok(Response.data(provedorDto));
 	}
@@ -79,16 +77,6 @@ public class ProvedorController {
 		}
 		provedorService.removerPeloId(id);
 		return ResponseEntity.noContent().build();
-	}
-
-	private ProvedorDto converterProvedorParaDto(Provedor provedor, ProvedorDto provedorDto) {
-		modelMapper.map(provedor, provedorDto);
-		return provedorDto;
-	}
-
-	private Provedor converterDtoParaProvedor(ProvedorDto provedorDto, Provedor provedor) {
-		modelMapper.map(provedorDto, provedor);
-		return provedor;
 	}
 
 }
