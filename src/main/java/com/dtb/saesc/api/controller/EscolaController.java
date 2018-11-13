@@ -1,11 +1,9 @@
 package com.dtb.saesc.api.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,12 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.entities.Link;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
-import com.dtb.saesc.api.services.LinkService;
 
 @RestController
 @RequestMapping(value = "/escolas")
@@ -37,9 +34,7 @@ public class EscolaController {
 	@Autowired
 	private EscolaService escolaService;
 	@Autowired
-	private LinkService escolaLinkService;
-	@Autowired
-	private ModelMapper modelMapper;
+	private EntityDtoConverter<EscolaDto, Escola> converter;
 
 	@GetMapping
 	public ResponseEntity<Response> buscarEscolas(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -92,6 +87,7 @@ public class EscolaController {
 	}
 
 	private Escola validaEAtualizaEscola(Escola escola, EscolaDto escolaDto, BindingResult result) {
+		System.out.println(escolaDto.toString());
 		if (!escola.getInep().equals(escolaDto.getInep())) {
 			validaEscolaInep(escolaDto.getInep(), result);
 		}
@@ -109,14 +105,12 @@ public class EscolaController {
 	}
 
 	private Escola converterDtoParaEscola(EscolaDto escolaDto, Escola escola) {
-		modelMapper.map(escolaDto, escola);
+		converter.toEntity(escolaDto, escola);
 		return escola;
 	}
 
 	private EscolaDto converterEscolaParaDto(Escola escola, EscolaDto escolaDto) {
-		modelMapper.map(escola, escolaDto);
-		List<Link> links = escolaLinkService.buscarPorescola(escola.getId());
-		links.forEach(link -> escolaDto.getLinksIp().add(link.getProvedor().getNome() + " - " + link.getIp()));
+		converter.toDto(escola, escolaDto);
 		return escolaDto;
 	}
 
