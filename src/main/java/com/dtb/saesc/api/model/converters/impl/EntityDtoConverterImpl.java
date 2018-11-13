@@ -18,8 +18,9 @@ public class EntityDtoConverterImpl<Dto,Entity> implements EntityDtoConverter<Dt
 	}
 
 	@Override
-	public Dto toDto(Entity entity) {
-		return null;
+	public Dto toDto(Entity entity, Class<Dto> cls) {
+		return modelMapper.map(entity, cls);
+		//return null;
 	}
 
 	@Override
@@ -29,9 +30,8 @@ public class EntityDtoConverterImpl<Dto,Entity> implements EntityDtoConverter<Dt
 	}
 
 	@Override
-	public Entity toEntity(Dto dto) {
-		// TODO Auto-generated method stub
-		return null;
+	public Entity toEntity(Dto dto, Class <Entity> cls) {
+		return modelMapper.map(dto, cls);
 	}
 
 }
