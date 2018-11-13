@@ -37,8 +37,8 @@ CREATE TABLE funcionario(
 );
 INSERT INTO link_provedor(nome) VALUES('Oi');
 INSERT INTO link_provedor(nome) VALUES('ETICE');
-INSERT INTO escola(nome,crede,data_criacao,data_atualizacao)
- VALUES('SEDUC','SEDUC',CURRENT_DATE,CURRENT_DATE);
+INSERT INTO escola(nome,crede,inep,data_criacao,data_atualizacao)
+ VALUES('SEDUC','SEDUC','00000000',CURRENT_DATE,CURRENT_DATE);
 INSERT INTO escola_link(ip,id_provedor,id_escola)
  VALUES('200.217.200.xxx','1','1');
 INSERT INTO escola_link(ip,id_provedor,id_escola)
