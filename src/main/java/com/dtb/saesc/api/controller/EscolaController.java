@@ -36,36 +36,61 @@ public class EscolaController {
 	@Autowired
 	private EntityDtoConverter<EscolaDto, Escola> converter;
 
+	/**
+	 * Retorna todas as escolas paginadas
+	 *
+	 *
+	 * @return ResponseEntity<Response>
+	 *
+	 * 
+	 */
+
 	@GetMapping
 	public ResponseEntity<Response> buscarEscolas(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "order", defaultValue = "id") String order,
+			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam(value = "dir", defaultValue = "DESC") String dir) {
-		PageRequest pageRequest = PageRequest.of(page, 10, Direction.valueOf(dir), order);
+		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
 		Page<Escola> escolas = escolaService.buscarTodas(pageRequest);
-		Page<EscolaDto> escolasDto = escolas.map(escola -> converterEscolaParaDto(escola, new EscolaDto()));
+		Page<EscolaDto> escolasDto = escolas.map(escola -> converter.toDto(escola, EscolaDto.class));
 		return ResponseEntity.ok(Response.data(escolasDto));
 	}
 
+	/**
+	 * Retorna as informações da escola de acordo com o id passado na url
+	 * 
+	 * @param id
+	 * @return ResponseEntity<Response>
+	 * 
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		EscolaDto escolaDto = converterEscolaParaDto(escolaPeloId.get(), new EscolaDto());
+		EscolaDto escolaDto = converter.toDto(escolaPeloId.get(), EscolaDto.class);
 		return ResponseEntity.ok(Response.data(escolaDto));
 
 	}
 
+	/**
+	 * 
+	 * Adiciona uma escola
+	 * 
+	 * @param EscolaDto
+	 * @param result
+	 * 
+	 */
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Valid @RequestBody EscolaDto escolaDto, BindingResult result) {
-		Escola escola = converterDtoParaEscola(escolaDto, new Escola());
+		Escola escola = converter.toEntity(escolaDto, Escola.class);
 		validaEscolaInep(escola.getInep(), result);
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		escola = escolaService.persistir(escola);
-		escolaDto = converterEscolaParaDto(escola, escolaDto);
+		escolaDto = converter.toDto(escola, escolaDto);
 		return ResponseEntity.ok(Response.data(escolaDto));
 
 	}
@@ -82,19 +107,36 @@ public class EscolaController {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		escolaService.persistir(escola);
-		escolaDto = converterEscolaParaDto(escola, escolaDto);
+		escolaDto = converter.toDto(escola, escolaDto);
 		return ResponseEntity.ok(Response.data(escolaDto));
 	}
 
+	/**
+	 * 
+	 * Valida dados especificos para entidade Escola e entao converte para um Dto
+	 * 
+	 * @param escola
+	 * @param escolaDto
+	 * @param result
+	 * 
+	 */
+
 	private Escola validaEAtualizaEscola(Escola escola, EscolaDto escolaDto, BindingResult result) {
-		System.out.println(escolaDto.toString());
 		if (!escola.getInep().equals(escolaDto.getInep())) {
 			validaEscolaInep(escolaDto.getInep(), result);
 		}
 		// Não sei porque diabos o id não é mapeado no modellmapper ver depois isso.
 		escolaDto.setId(escola.getId());
-		return converterDtoParaEscola(escolaDto, escola);
+		return converter.toEntity(escolaDto, escola);
 	}
+
+	/**
+	 * Checa se já existe alguma escola cadastrada com o inep informado
+	 * 
+	 * @param inep
+	 * @param result
+	 * 
+	 */
 
 	private void validaEscolaInep(String inep, BindingResult result) {
 		Optional<Escola> escolaPeloInep = escolaService.buscarPeloInep(inep);
@@ -102,16 +144,6 @@ public class EscolaController {
 			result.addError(new ObjectError("escola", "Escola já cadastrada com o inep informado"));
 		}
 
-	}
-
-	private Escola converterDtoParaEscola(EscolaDto escolaDto, Escola escola) {
-		converter.toEntity(escolaDto, escola);
-		return escola;
-	}
-
-	private EscolaDto converterEscolaParaDto(Escola escola, EscolaDto escolaDto) {
-		converter.toDto(escola, escolaDto);
-		return escolaDto;
 	}
 
 }
