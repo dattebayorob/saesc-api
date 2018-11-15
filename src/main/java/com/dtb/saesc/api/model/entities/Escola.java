@@ -43,7 +43,7 @@ public class Escola {
 	@Column(name = "data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
 	@OneToMany(mappedBy = "escola", fetch = FetchType.LAZY)
-	@JsonIgnore
+	//@JsonIgnore
 	private List<Link> links;
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore

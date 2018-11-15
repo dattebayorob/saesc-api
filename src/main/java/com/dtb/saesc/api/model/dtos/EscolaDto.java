@@ -2,7 +2,6 @@ package com.dtb.saesc.api.model.dtos;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -16,7 +15,7 @@ public class EscolaDto {
 	@NotEmpty(message = "O inep da escola deve ser informado.")
 	@Length(min = 6, max = 8, message = "O Inep da escola deve conter entre 3 e 8 caracteres.")
 	private String inep;
-	private List<String> linksIp;
+	private List<LinkDto> links;
 	@NotEmpty(message = "A crede da escola deve ser informada.")
 	private String crede;
 	private String rua;
@@ -55,15 +54,16 @@ public class EscolaDto {
 		this.inep = inep;
 	}
 
-	public List<String> getLinksIp() {
-		if (this.linksIp == null) {
-			this.linksIp = new ArrayList<>();
-		}
-		return linksIp;
+	
+	
+	public List<LinkDto> getlinks() {
+		if(this.links == null)
+			this.links = new ArrayList<>();
+		return links;
 	}
 
-	public void setLinksIp(List<String> linksIp) {
-		this.linksIp = linksIp;
+	public void setlinks(List<LinkDto> links) {
+		this.links = links;
 	}
 
 	public String getCrede() {
