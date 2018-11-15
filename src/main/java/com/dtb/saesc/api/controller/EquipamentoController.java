@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
@@ -36,13 +37,6 @@ public class EquipamentoController {
 			return ResponseEntity.notFound().build();
 		EquipamentoDto equipamentoDto = converter.toDto(equipamentoPeloId.get(), EquipamentoDto.class);
 		return ResponseEntity.ok(Response.data(equipamentoDto));
-	}
-	@GetMapping("/{id}/historico")
-	public ResponseEntity<Response> buscarHistorico(@PathVariable("id") Long id){
-		List<EquipamentoHistorico> historicos = equipamentoService.buscarHistorico(id);
-		List<EquipamentoHistoricoDto> historicosDto = new ArrayList<>();
-		historicos.forEach(historico -> historicosDto.add(historicoConverter.toDto(historico, EquipamentoHistoricoDto.class)));
-		return ResponseEntity.ok(Response.data(historicosDto));
 	}
 	
 }

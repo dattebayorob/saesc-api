@@ -31,7 +31,6 @@ public class Equipamento {
 	private String tombamento;
 	private String descricao;	
 	@OneToMany(mappedBy = "equipamento", fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<EquipamentoHistorico> historico;
 
 	@ManyToOne(fetch = FetchType.EAGER)

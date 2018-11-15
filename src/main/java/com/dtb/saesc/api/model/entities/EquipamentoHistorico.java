@@ -14,21 +14,32 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "equipamento_historico")
 public class EquipamentoHistorico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_equipamento", nullable = false)
+	@JsonIgnore
 	private Equipamento equipamento;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_funcionario", nullable = false)
 	private Funcionario funcionario;
 	private String comentario;
 	private Date data;
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Equipamento getEquipamento() {
 		return equipamento;
 	}
@@ -66,5 +77,5 @@ public class EquipamentoHistorico {
 	private void prePersist() {
 		this.data = new Date();
 	}
-	
+
 }

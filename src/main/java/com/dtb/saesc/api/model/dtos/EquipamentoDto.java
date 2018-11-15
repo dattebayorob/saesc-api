@@ -1,5 +1,8 @@
 package com.dtb.saesc.api.model.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
@@ -18,6 +21,7 @@ public class EquipamentoDto {
 	private String modeloMarcaNome;
 	@NotEmpty(message = "A escola deve ser informada.")
 	private Long escolaId;
+	private List<EquipamentoHistoricoDto> historico;
 	public Long getId() {
 		return id;
 	}
@@ -67,5 +71,15 @@ public class EquipamentoDto {
 	public void setEscolaId(Long escolaId) {
 		this.escolaId = escolaId;
 	}
+	public List<EquipamentoHistoricoDto> getHistorico() {
+		if(this.historico == null)
+			historico = new ArrayList<>();
+		return historico;
+	}
+	public void setHistorico(List<EquipamentoHistoricoDto> historico) {
+		this.historico = historico;
+	}
+	
+	
 	
 }
