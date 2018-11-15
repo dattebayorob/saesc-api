@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
+import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
 
@@ -35,6 +37,8 @@ public class EscolaController {
 	private EscolaService escolaService;
 	@Autowired
 	private EntityDtoConverter<EscolaDto, Escola> converter;
+	@Autowired
+	private EntityDtoConverter<EscolaResumidoDto, Escola> converterResumido;
 
 	/**
 	 * Retorna todas as escolas paginadas
@@ -52,7 +56,7 @@ public class EscolaController {
 			@RequestParam(value = "dir", defaultValue = "DESC") String dir) {
 		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
 		Page<Escola> escolas = escolaService.buscarTodas(pageRequest);
-		Page<EscolaDto> escolasDto = escolas.map(escola -> converter.toDto(escola, EscolaDto.class));
+		Page<EscolaResumidoDto> escolasDto = escolas.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
 		return ResponseEntity.ok(Response.data(escolasDto));
 	}
 
