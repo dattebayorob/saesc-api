@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -29,7 +30,10 @@ public class Equipamento {
 	private EquipamentoModelo modelo;
 	private String serial;
 	private String tombamento;
-	private String descricao;	
+	private String descricao;
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_status", nullable = false)
+	private EquipamentoStatus status;
 	@OneToMany(mappedBy = "equipamento", fetch = FetchType.LAZY)
 	private List<EquipamentoHistorico> historico;
 
@@ -111,6 +115,16 @@ public class Equipamento {
 
 	public void setTombamento(String tombamento) {
 		this.tombamento = tombamento;
+	}
+	
+	
+	
+	public EquipamentoStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EquipamentoStatus status) {
+		this.status = status;
 	}
 
 	public Date getDataCriacao() {

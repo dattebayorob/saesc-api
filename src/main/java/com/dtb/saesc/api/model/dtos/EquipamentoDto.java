@@ -21,6 +21,7 @@ public class EquipamentoDto {
 	private String modeloMarcaNome;
 	@NotEmpty(message = "A escola deve ser informada.")
 	private Long escolaId;
+	private String statusNome;
 	private List<EquipamentoHistoricoDto> historico;
 	public Long getId() {
 		return id;
@@ -70,6 +71,13 @@ public class EquipamentoDto {
 	}
 	public void setEscolaId(Long escolaId) {
 		this.escolaId = escolaId;
+	}
+	
+	public String getStatusNome() {
+		return statusNome;
+	}
+	public void setStatusNome(String statusNome) {
+		this.statusNome = statusNome;
 	}
 	public List<EquipamentoHistoricoDto> getHistorico() {
 		if(this.historico == null)
