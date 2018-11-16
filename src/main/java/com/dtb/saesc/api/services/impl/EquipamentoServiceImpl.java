@@ -26,5 +26,13 @@ public class EquipamentoServiceImpl implements EquipamentoService{
 	public List<EquipamentoHistorico> buscarHistorico(Long id) {
 		return historicoRepository.findByEquipamentoId(id);
 	}
+	@Override
+	public Equipamento persistir(Equipamento equipamento) {
+		return equipamentoRepository.save(equipamento);
+	}
+	@Override
+	public Boolean hasEquipamento(Long id) {
+		return equipamentoRepository.existsById(id);
+	}
 
 }

@@ -9,4 +9,6 @@ import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
 public interface EquipamentoService {
 	public Optional<Equipamento> buscarPeloId(Long id);
 	public List<EquipamentoHistorico> buscarHistorico(Long id);
+	public Equipamento persistir(Equipamento equipamento);
+	public Boolean hasEquipamento(Long id);
 }

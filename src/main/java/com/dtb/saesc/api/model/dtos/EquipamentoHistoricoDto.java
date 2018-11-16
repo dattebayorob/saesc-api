@@ -1,12 +1,12 @@
 package com.dtb.saesc.api.model.dtos;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class EquipamentoHistoricoDto {
 	private Long id;
-	@NotEmpty(message = "O equipamento deve ser informado.")
+	@NotNull(message = "O equipamento deve ser informado.")
 	private Long equipamentoId;
-	@NotEmpty(message = "O funcionario deve ser inforamdo.")
+	@NotNull(message = "O funcionario deve ser inforamdo.")
 	private Long funcionarioId;
 	private String funcionarioNome;
 	private String comentario;

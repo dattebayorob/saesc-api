@@ -3,6 +3,7 @@ package com.dtb.saesc.api.model.entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +19,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "equipamento")
@@ -25,19 +27,19 @@ public class Equipamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_modelo", nullable = false)
 	private EquipamentoModelo modelo;
 	private String serial;
 	private String tombamento;
 	private String descricao;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_status", nullable = false)
 	private EquipamentoStatus status;
 	@OneToMany(mappedBy = "equipamento", fetch = FetchType.LAZY)
 	private List<EquipamentoHistorico> historico;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_escola", nullable = false)
 	private Escola escola;
 	@Column(name = "data_criacao", nullable = false)
@@ -142,5 +144,6 @@ public class Equipamento {
 	public void setDataAtualizacao(Date dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
 	}
+	
 
 }

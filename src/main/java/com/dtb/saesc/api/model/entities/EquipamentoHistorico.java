@@ -26,7 +26,7 @@ public class EquipamentoHistorico {
 	@JoinColumn(name = "id_equipamento", nullable = false)
 	@JsonIgnore
 	private Equipamento equipamento;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_funcionario", nullable = false)
 	private Funcionario funcionario;
 	private String comentario;

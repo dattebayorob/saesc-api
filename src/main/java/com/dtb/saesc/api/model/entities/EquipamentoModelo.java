@@ -23,7 +23,7 @@ public class EquipamentoModelo {
 	private Long id;
 	@Column(nullable = false)	
 	private String nome;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_marca", nullable = false)
 	private EquipamentoMarca marca;
 	@Enumerated(EnumType.STRING)
