@@ -1,10 +1,19 @@
 package com.dtb.saesc.api.model.dtos;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 public class EquipamentoCadastroDto {
 	private Long id;
+	@NotNull(message = "Uma descrição deve ser informada.")
+	@Length(min = 5, max = 255, message = "Descrição deve conter entre 5 e 255 caracteres.")
 	private String descricao;
+	@NotNull(message = "Modelo deve ser informado.")
 	private Long modeloId;
+	@NotNull(message = "Escola deve ser informada.")
 	private Long escolaId;
+	@NotNull(message = "Status do equipamento deve ser informado.")
 	private Long statusId;
 	private String comentario;
 	public Long getId() {
