@@ -63,7 +63,6 @@ public class ProvedorController {
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
-		provedorDto.setId(id);
 		Provedor provedor = converter.toEntity(provedorDto, provedorById.get());
 		provedorService.persistir(provedor);
 		return ResponseEntity.ok(Response.data(provedorDto));

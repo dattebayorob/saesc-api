@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="escola_link")
-public class Link {
+public class Link implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -26,9 +26,11 @@ public class Link {
 	@JoinColumn(name="id_escola")
 	@JsonIgnore
 	private Escola escola;
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

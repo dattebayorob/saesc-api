@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="funcionario")
-public class Funcionario {
+public class Funcionario  implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -54,9 +54,11 @@ public class Funcionario {
 		this.dataAtualizacao = dataAtual;
 		this.dataCriacao = dataAtual;
 	}
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

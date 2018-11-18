@@ -3,7 +3,6 @@ package com.dtb.saesc.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.LinkDto;
 import com.dtb.saesc.api.model.entities.Link;
 import com.dtb.saesc.api.model.response.Response;
-import com.dtb.saesc.api.services.EscolaService;
 import com.dtb.saesc.api.services.LinkService;
 
 @RestController

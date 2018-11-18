@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "escola")
-public class Escola {
+public class Escola implements GenericEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -43,18 +43,18 @@ public class Escola {
 	@Column(name = "data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
 	@OneToMany(mappedBy = "escola", fetch = FetchType.LAZY)
-	//@JsonIgnore
+	// @JsonIgnore
 	private List<Link> links;
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Funcionario> funcionarios;
 
-	
-
+	@Override
 	public Long getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -165,9 +165,5 @@ public class Escola {
 				+ ", rua=" + rua + ", bairro=" + bairro + ", telefone=" + telefone + ", dataCriacao=" + dataCriacao
 				+ ", dataAtualizacao=" + dataAtualizacao + ", links=" + links + ", funcionarios=" + funcionarios + "]";
 	}
-
-	
-
-	
 
 }

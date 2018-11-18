@@ -25,7 +25,6 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
 
@@ -129,8 +128,6 @@ public class EscolaController {
 		if (!escola.getInep().equals(escolaDto.getInep())) {
 			validaEscolaInep(escolaDto.getInep(), result);
 		}
-		// Não sei porque diabos o id não é mapeado no modellmapper ver depois isso.
-		escolaDto.setId(escola.getId());
 		return converter.toEntity(escolaDto, escola);
 	}
 

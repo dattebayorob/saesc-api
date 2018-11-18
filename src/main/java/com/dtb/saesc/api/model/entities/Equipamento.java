@@ -3,7 +3,6 @@ package com.dtb.saesc.api.model.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,12 +17,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "equipamento")
-public class Equipamento {
+public class Equipamento implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -62,11 +58,11 @@ public class Equipamento {
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
 	}
-
+	@Override
 	public Long getId() {
 		return id;
 	}
-
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

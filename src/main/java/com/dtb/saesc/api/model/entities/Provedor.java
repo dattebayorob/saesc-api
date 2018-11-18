@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 @Entity
 @Table(name="link_provedor")
-public class Provedor {
+public class Provedor implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,9 +26,11 @@ public class Provedor {
 	private Date dataCriacao;
 	@Column(name="data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

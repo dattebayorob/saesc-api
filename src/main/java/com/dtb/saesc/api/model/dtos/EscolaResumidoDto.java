@@ -2,7 +2,9 @@ package com.dtb.saesc.api.model.dtos;
 
 import java.util.List;
 
-public class EscolaResumidoDto {
+import com.dtb.saesc.api.model.entities.GenericEntity;
+
+public class EscolaResumidoDto implements GenericEntity{
 	private Long id;
 	private String crede;
 	private String prefixo;

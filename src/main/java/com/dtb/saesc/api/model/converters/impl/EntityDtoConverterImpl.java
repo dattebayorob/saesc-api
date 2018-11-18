@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
+import com.dtb.saesc.api.model.entities.GenericEntity;
 
 @Component
-public class EntityDtoConverterImpl<Dto,Entity> implements EntityDtoConverter<Dto, Entity>{
+public class EntityDtoConverterImpl<Dto extends GenericEntity,Entity extends GenericEntity> implements EntityDtoConverter<Dto, Entity>{
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -25,6 +26,7 @@ public class EntityDtoConverterImpl<Dto,Entity> implements EntityDtoConverter<Dt
 
 	@Override
 	public Entity toEntity(Dto dto, Entity entity) {
+		dto.setId(entity.getId());
 		modelMapper.map(dto, entity);
 		return entity;
 	}

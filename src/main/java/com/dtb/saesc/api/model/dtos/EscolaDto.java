@@ -7,7 +7,9 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-public class EscolaDto {
+import com.dtb.saesc.api.model.entities.GenericEntity;
+
+public class EscolaDto implements GenericEntity{
 	private Long id;
 	private String prefixo;
 	@NotEmpty(message = "O nome da escola deve ser informado.")
@@ -21,11 +23,11 @@ public class EscolaDto {
 	private String rua;
 	private String bairro;
 	private String telefone;
-
+	@Override
 	public Long getId() {
 		return id;
 	}
-
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

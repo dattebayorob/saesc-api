@@ -7,7 +7,9 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-public class EquipamentoDto {
+import com.dtb.saesc.api.model.entities.GenericEntity;
+
+public class EquipamentoDto implements GenericEntity{
 	private Long id;
 	@NotEmpty(message = "Descrição deve ser informado.")
 	@Length(min = 5, max = 255, message = "Descrição deve conter entre 5 e 255 caracteres.")
@@ -23,9 +25,11 @@ public class EquipamentoDto {
 	private Long escolaId;
 	private String statusNome;
 	private List<EquipamentoHistoricoDto> historico;
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

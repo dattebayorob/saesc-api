@@ -4,7 +4,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-public class EquipamentoCadastroDto {
+import com.dtb.saesc.api.model.entities.GenericEntity;
+
+public class EquipamentoCadastroDto implements GenericEntity{
 	private Long id;
 	@NotNull(message = "Uma descrição deve ser informada.")
 	@Length(min = 5, max = 255, message = "Descrição deve conter entre 5 e 255 caracteres.")
@@ -16,9 +18,11 @@ public class EquipamentoCadastroDto {
 	@NotNull(message = "Status do equipamento deve ser informado.")
 	private Long statusId;
 	private String comentario;
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

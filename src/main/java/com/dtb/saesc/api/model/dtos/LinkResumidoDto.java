@@ -10,5 +10,5 @@ public class LinkResumidoDto {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	
+
 }
