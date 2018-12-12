@@ -1,5 +1,7 @@
 package com.dtb.saesc.api.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,10 @@ public class FuncionarioServiceImpl implements FuncionarioService{
 	@Override
 	public Funcionario persistir(Funcionario funcionario) {
 		return funcionarioRepository.save(funcionario);
+	}
+
+	@Override
+	public Optional<Funcionario> buscarPeloEmail(String email) {
+		return funcionarioRepository.findByEmail(email);
 	}
 }
