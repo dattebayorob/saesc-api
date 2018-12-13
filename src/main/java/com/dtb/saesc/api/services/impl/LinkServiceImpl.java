@@ -13,11 +13,16 @@ import com.dtb.saesc.api.services.LinkService;
 public class LinkServiceImpl implements LinkService{
 
 	@Autowired
-	private LinkRepository escolaLinkRepository;
+	private LinkRepository repository;
 	
 	@Override
 	public List<Link> buscarPorescola(Long id) {
-		return escolaLinkRepository.findByEscolaId(id);
+		return repository.findByEscolaId(id);
+	}
+
+	@Override
+	public List<Link> buscarLinks(String ip) {
+		return repository.findAllByIp(ip);
 	}
 	
 }

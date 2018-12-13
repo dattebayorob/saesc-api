@@ -15,6 +15,7 @@ public class LinkDto implements GenericEntity {
 	private String status;
 	@NotEmpty(message = "Escola deve ser informada.")
 	private long escolaId;
+	private String escolaNome;
 
 	@Override
 	public Long getId() {
@@ -65,5 +66,14 @@ public class LinkDto implements GenericEntity {
 	public void setEscolaId(long escolaId) {
 		this.escolaId = escolaId;
 	}
+
+	public String getEscolaNome() {
+		return escolaNome;
+	}
+
+	public void setEscolaNome(String escolaNome) {
+		this.escolaNome = escolaNome;
+	}
+	
 
 }

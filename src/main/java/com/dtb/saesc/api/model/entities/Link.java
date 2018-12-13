@@ -8,8 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name="escola_link")
 public class Link implements GenericEntity{
@@ -24,7 +22,6 @@ public class Link implements GenericEntity{
 	private String status;
 	@ManyToOne
 	@JoinColumn(name="id_escola")
-	@JsonIgnore
 	private Escola escola;
 	@Override
 	public Long getId() {

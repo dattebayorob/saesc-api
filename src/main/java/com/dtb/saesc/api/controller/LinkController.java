@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
@@ -23,6 +24,14 @@ public class LinkController {
 	private EntityDtoConverter<LinkDto, Link> converter;
 	@Autowired
 	private LinkService linkService;
+	
+	@GetMapping
+	public ResponseEntity<Response> buscarLinks(@RequestParam(name = "s", defaultValue = "") String s){
+		List<Link> links = linkService.buscarLinks(s);
+		List<LinkDto> dto = new ArrayList<>();
+		links.forEach(link -> dto.add(converter.toDto(link, LinkDto.class)));
+		return ResponseEntity.ok(Response.data(dto));
+	}
 	
 	@GetMapping("/escola/{id}")
 	public ResponseEntity<Response> buscarLinksPorEscola(@PathVariable("id") Long idEscola){

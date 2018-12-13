@@ -6,4 +6,6 @@ import com.dtb.saesc.api.model.entities.Link;
 
 public interface LinkService {
 	public List<Link> buscarPorescola(Long id);
+
+	public List<Link> buscarLinks(String s);
 }
