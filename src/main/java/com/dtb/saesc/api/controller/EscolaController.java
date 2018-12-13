@@ -52,9 +52,10 @@ public class EscolaController {
 	public ResponseEntity<Response> buscarEscolas(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "order", defaultValue = "id") String order,
 			@RequestParam(value = "size", defaultValue = "10") int size,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir) {
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
+			@RequestParam(value = "s",defaultValue = "") String s) {
 		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
-		Page<Escola> escolas = escolaService.buscarTodas(pageRequest);
+		Page<Escola> escolas = escolaService.buscarTodas(pageRequest,s);
 		Page<EscolaResumidoDto> escolasDto = escolas.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
 		return ResponseEntity.ok(Response.data(escolasDto));
 	}

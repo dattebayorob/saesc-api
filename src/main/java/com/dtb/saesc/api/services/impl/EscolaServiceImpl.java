@@ -24,8 +24,9 @@ public class EscolaServiceImpl implements EscolaService {
 	}
 
 	@Override
-	public Page<Escola> buscarTodas(PageRequest pageRequest) {
-		return escolaRepository.findAll(pageRequest);
+	public Page<Escola> buscarTodas(PageRequest pageRequest, String search) {
+		return escolaRepository.findAllByNome(search, pageRequest);
+		//return escolaRepository.findAll(pageRequest);
 	}
 
 	@Override
