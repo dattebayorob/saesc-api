@@ -5,9 +5,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.enums.CredeEnum;
+import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.services.EscolaService;
 
@@ -37,6 +40,16 @@ public class EscolaServiceImpl implements EscolaService {
 	@Override
 	public Escola persistir(Escola escola) {
 		return escolaRepository.save(escola);
+	}
+
+	@Override
+	public Page<Escola> buscarTodasPorCrede(Pageable pageable, CredeEnum crede, String s) {
+		return escolaRepository.findByCrede(pageable, crede, s);
+	}
+
+	@Override
+	public Page<Escola> buscarTodasPorPrefixo(PageRequest pageRequest, PrefixoEnum prefixo, String s) {
+		return escolaRepository.findByPrefixo(pageRequest, prefixo, s);
 	}
 
 }

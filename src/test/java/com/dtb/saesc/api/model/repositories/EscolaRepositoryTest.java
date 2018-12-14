@@ -24,30 +24,28 @@ public class EscolaRepositoryTest {
 	private static final String SEARCH_CRITERIA = "";
 	
 	@Test
-	public void testBuscarListaPeloNomeComNamedQuery() {
+	public void testBuscarListaPeloNomeQuery() {
 		List<Escola> es = repository.findListByNome(SEARCH_CRITERIA);
 		if(!es.isEmpty())
 			es.forEach(e -> System.out.println("Lista->"+e.getId()));
 		assertTrue(!es.isEmpty());
 	}
 	@Test
-	public void testBuscarPaginaPeloNomeComNamedQuery() {
+	public void testBuscarPaginaPeloNomeQuery() {
 		Page<Escola> es = repository.findAllByNome(SEARCH_CRITERIA, PageRequest.of(0, 10, Direction.valueOf("ASC"), "id"));
 		if(es.hasContent())
 			es.forEach(e -> System.out.println("Pagina->"+e.getId()));
 		assertTrue(es.hasContent());
 	}
-	/*
 	@Test
-	public void testBuscarPeloNomeComQuery() {
+	public void testBuscarListaPeloNomeComNamedQuery() {
 		List<Escola> es = repository.findListByNome(SEARCH_CRITERIA);
-		//Page<Escola> es = repository.findAllByNome(SEARCH_CRITERIA, PageRequest.of(0, 10, Direction.valueOf("ASC"), "id"));
-		//if(es.hasContent())
-			//es.forEach(e -> System.out.println(e.toString()));
+		if(!es.isEmpty())
+			es.forEach(e -> System.out.println(e.getId()));
 		assertTrue(!es.isEmpty());
-	}*/
-	//@Test
-	//public void testBuscarPeloNomeComCriteriaBuilder() {
+	}
+	@Test
+	public void testBuscarPaginaPeloNomeComCriteriaBuilder() {
 		// Do nothing for now. 
-	//}
+	}
 }

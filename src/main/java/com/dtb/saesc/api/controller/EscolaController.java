@@ -25,6 +25,8 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.enums.CredeEnum;
+import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
 
@@ -40,9 +42,12 @@ public class EscolaController {
 	private EntityDtoConverter<EscolaResumidoDto, Escola> converterResumido;
 
 	/**
-	 * Retorna todas as escolas paginadas
-	 *
-	 *
+	 * Retorna todas as escolas paginadas de acordo com o criterio de pesquisa
+	 * 
+	 * @param order
+	 * @param size
+	 * @param dir
+	 * @param s
 	 * @return ResponseEntity<Response>
 	 *
 	 * 
@@ -53,10 +58,86 @@ public class EscolaController {
 			@RequestParam(value = "order", defaultValue = "id") String order,
 			@RequestParam(value = "size", defaultValue = "10") int size,
 			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
-			@RequestParam(value = "s",defaultValue = "") String s) {
+			@RequestParam(value = "s", defaultValue = "") String s) {
 		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
-		Page<Escola> escolas = escolaService.buscarTodas(pageRequest,s);
-		Page<EscolaResumidoDto> escolasDto = escolas.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
+		Page<Escola> escolas = escolaService.buscarTodas(pageRequest, s);
+		return responseEntityParaEscolaPaginado(escolas);
+	}
+
+	/**
+	 * Retorna todas as escolas por crede paginadas de acordo com o criterio de
+	 * pesquisa
+	 * 
+	 * @param order
+	 * @param size
+	 * @param dir
+	 * @param s
+	 * @param crede
+	 * @return ResponseEntity<Response>
+	 *
+	 * 
+	 */
+
+	@GetMapping("/crede/{crede}")
+	public ResponseEntity<Response> buscarEscolasPorCrede(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "order", defaultValue = "id") String order,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
+			@RequestParam(value = "s", defaultValue = "") String s, @PathVariable("crede") String crede) {
+		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
+		try {
+			Page<Escola> escolas = escolaService.buscarTodasPorCrede(pageRequest,
+					CredeEnum.valueOf(crede.toUpperCase()), s);
+			return responseEntityParaEscolaPaginado(escolas);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.noContent().build();
+		}
+	}
+
+	/**
+	 * Retorna todas as escolas por prefixo paginadas de acordo com o criterio de
+	 * pesquisa
+	 * 
+	 * @param order
+	 * @param size
+	 * @param dir
+	 * @param s
+	 * @param prefixo
+	 * @return ResponseEntity<Response>
+	 *
+	 * 
+	 */
+
+	@GetMapping("/prefixo/{prefixo}")
+	public ResponseEntity<Response> buscarEscolasPorPrefixo(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "order", defaultValue = "id") String order,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
+			@RequestParam(value = "s", defaultValue = "") String s, @PathVariable("prefixo") String pref) {
+		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), "id");
+		try {
+			Page<Escola> escolas = escolaService.buscarTodasPorPrefixo(pageRequest,
+					PrefixoEnum.valueOf(pref.toUpperCase()), s);
+			return responseEntityParaEscolaPaginado(escolas);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.noContent().build();
+		}
+	}
+
+	/**
+	 * 
+	 * Retorna uma entidade rest 200 ou 204
+	 * 
+	 * @param Page<Escola> escolas
+	 * @return ResponseEntity
+	 * 
+	 */
+
+	private ResponseEntity<Response> responseEntityParaEscolaPaginado(Page<Escola> escolas) {
+		if (!escolas.hasContent())
+			return ResponseEntity.noContent().build();
+		Page<EscolaResumidoDto> escolasDto = escolas
+				.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
 		return ResponseEntity.ok(Response.data(escolasDto));
 	}
 
