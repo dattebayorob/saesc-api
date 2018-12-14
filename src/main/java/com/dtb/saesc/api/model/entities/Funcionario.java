@@ -36,7 +36,7 @@ public class Funcionario  implements GenericEntity{
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private PerfilEnum perfil;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_escola")
 	@JsonIgnore
 	private Escola escola;

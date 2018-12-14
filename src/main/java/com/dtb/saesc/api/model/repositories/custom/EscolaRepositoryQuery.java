@@ -1,5 +1,7 @@
 package com.dtb.saesc.api.model.repositories.custom;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,7 @@ public interface EscolaRepositoryQuery {
 
 	@Query("SELECT e FROM Escola e WHERE lower(e.nome) like lower('%' || :s || '%')")
 	Page<Escola> findAllByNome(@Param("s") String search, Pageable pageable);
+	
+	@Query("SELECT e FROM Escola e WHERE lower(e.nome) like lower('%' || :s || '%')")
+	List<Escola> findListByNome(@Param("s") String search);
 }

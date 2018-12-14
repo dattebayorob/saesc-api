@@ -19,7 +19,6 @@ import javax.persistence.Table;
 
 import com.dtb.saesc.api.model.enums.CredeEnum;
 import com.dtb.saesc.api.model.enums.PrefixoEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "escola")
@@ -46,7 +45,11 @@ public class Escola implements GenericEntity {
 	private List<Link> links;
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
-
+	
+	public Escola() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	public Long getId() {
 		return id;
