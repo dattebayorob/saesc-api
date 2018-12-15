@@ -6,8 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -18,15 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.enums.CredeEnum;
-import com.dtb.saesc.api.model.enums.PrefixoEnum;
+import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
 
@@ -44,84 +41,19 @@ public class EscolaController {
 	/**
 	 * Retorna todas as escolas paginadas de acordo com o criterio de pesquisa
 	 * 
-	 * @param order
-	 * @param size
-	 * @param dir
-	 * @param s
+	 * @param filtros
+	 * @param page
+	 * 
 	 * @return ResponseEntity<Response>
 	 *
 	 * 
 	 */
 
 	@GetMapping
-	public ResponseEntity<Response> buscarEscolas(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "order", defaultValue = "id") String order,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
-			@RequestParam(value = "s", defaultValue = "") String s) {
-		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
-		Page<Escola> escolas = escolaService.buscarTodas(pageRequest, s);
+	public ResponseEntity<Response> pesquisarEscolas(EscolaFilter filtros, Pageable page) {
+		Page<Escola> escolas = escolaService.pesquisarEscolas(filtros, page);
 		return responseEntityParaEscolaPaginado(escolas);
-	}
 
-	/**
-	 * Retorna todas as escolas por crede paginadas de acordo com o criterio de
-	 * pesquisa
-	 * 
-	 * @param order
-	 * @param size
-	 * @param dir
-	 * @param s
-	 * @param crede
-	 * @return ResponseEntity<Response>
-	 *
-	 * 
-	 */
-
-	@GetMapping("/crede/{crede}")
-	public ResponseEntity<Response> buscarEscolasPorCrede(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "order", defaultValue = "id") String order,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
-			@RequestParam(value = "s", defaultValue = "") String s, @PathVariable("crede") String crede) {
-		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), order);
-		try {
-			Page<Escola> escolas = escolaService.buscarTodasPorCrede(pageRequest,
-					CredeEnum.valueOf(crede.toUpperCase()), s);
-			return responseEntityParaEscolaPaginado(escolas);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.noContent().build();
-		}
-	}
-
-	/**
-	 * Retorna todas as escolas por prefixo paginadas de acordo com o criterio de
-	 * pesquisa
-	 * 
-	 * @param order
-	 * @param size
-	 * @param dir
-	 * @param s
-	 * @param prefixo
-	 * @return ResponseEntity<Response>
-	 *
-	 * 
-	 */
-
-	@GetMapping("/prefixo/{prefixo}")
-	public ResponseEntity<Response> buscarEscolasPorPrefixo(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "order", defaultValue = "id") String order,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir,
-			@RequestParam(value = "s", defaultValue = "") String s, @PathVariable("prefixo") String pref) {
-		PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(dir), "id");
-		try {
-			Page<Escola> escolas = escolaService.buscarTodasPorPrefixo(pageRequest,
-					PrefixoEnum.valueOf(pref.toUpperCase()), s);
-			return responseEntityParaEscolaPaginado(escolas);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.noContent().build();
-		}
 	}
 
 	/**
