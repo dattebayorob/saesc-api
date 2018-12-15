@@ -1,20 +1,13 @@
 package com.dtb.saesc.api.model.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
-
-import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
-import com.dtb.saesc.api.model.entities.Equipamento;
 import java.util.List;
 
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@NamedQueries({
-	@NamedQuery(name = "EquipamentoHistoricoRepository.findByEquipamentoId",
-			query = "SELECT historico FROM equipamento_historico historico WHERE historico.equipamento.id = :id")
-})
+import com.dtb.saesc.api.model.entities.Equipamento;
+import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
+
 public interface EquipamentoHistoricoRepository extends JpaRepository<EquipamentoHistorico, Long>{
 	List<EquipamentoHistorico> findByEquipamento(Equipamento equipamento);
-	List<EquipamentoHistorico> findByEquipamentoId(@Param("id") Long id);
+	List<EquipamentoHistorico> findByEquipamentoId(Long id);
 }
