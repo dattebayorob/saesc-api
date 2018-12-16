@@ -37,11 +37,11 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 			predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")),
 					"%" + filter.getNome().toLowerCase() + "%"));
 		}
-		if (CredeEnum.isValid(filter.getCrede())) {
+		if (EnumUtils.isValid(filter.getCrede(), CredeEnum.values())) {
 			predicates
 					.add(criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
 		}
-		if (PrefixoEnum.isValid(filter.getPrefixo())) {
+		if (EnumUtils.isValid(filter.getPrefixo(), PrefixoEnum.values())) {
 			predicates.add(
 					criteriaBuilder.equal(root.get("prefixo"), PrefixoEnum.valueOf(filter.getPrefixo().toUpperCase())));
 		}
