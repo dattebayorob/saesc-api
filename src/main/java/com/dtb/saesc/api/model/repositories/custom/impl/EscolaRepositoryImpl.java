@@ -21,6 +21,7 @@ import com.dtb.saesc.api.model.enums.CredeEnum;
 import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.repositories.custom.EscolaRepositoryQuery;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
+import com.dtb.saesc.api.model.utils.EnumUtils;
 
 public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 	@Autowired
@@ -36,18 +37,13 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 			predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")),
 					"%" + filter.getNome().toLowerCase() + "%"));
 		}
-
-		try {
-			if (!StringUtils.isEmpty(filter.getCrede())) {
-				predicates.add(
-						criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
-			}
-			if (!StringUtils.isEmpty(filter.getPrefixo())) {
-				predicates.add(criteriaBuilder.equal(root.get("prefixo"),
-						PrefixoEnum.valueOf(filter.getPrefixo().toUpperCase())));
-			}
-		} catch (IllegalArgumentException e) {
-			//throw new AlgumaExcessãoMarota;
+		if (CredeEnum.isValid(filter.getCrede())) {
+			predicates
+					.add(criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
+		}
+		if (PrefixoEnum.isValid(filter.getPrefixo())) {
+			predicates.add(
+					criteriaBuilder.equal(root.get("prefixo"), PrefixoEnum.valueOf(filter.getPrefixo().toUpperCase())));
 		}
 		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
 		criteriaQuery.where(p);
