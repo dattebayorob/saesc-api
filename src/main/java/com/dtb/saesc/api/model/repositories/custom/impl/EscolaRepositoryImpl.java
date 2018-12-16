@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.enums.CredeEnum;
@@ -31,17 +32,17 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 		CriteriaQuery<Escola> criteriaQuery = criteriaBuilder.createQuery(Escola.class);
 		Root<Escola> root = criteriaQuery.from(Escola.class);
 		List<Predicate> predicates = new ArrayList<>();
-		if (!filter.getNome().isEmpty()) {
+		if (!StringUtils.isEmpty(filter.getNome())) {
 			predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")),
 					"%" + filter.getNome().toLowerCase() + "%"));
 		}
 
 		try {
-			if (!filter.getCrede().isEmpty()) {
+			if (!StringUtils.isEmpty(filter.getCrede())) {
 				predicates.add(
 						criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
 			}
-			if (!filter.getPrefixo().isEmpty()) {
+			if (!StringUtils.isEmpty(filter.getPrefixo())) {
 				predicates.add(criteriaBuilder.equal(root.get("prefixo"),
 						PrefixoEnum.valueOf(filter.getPrefixo().toUpperCase())));
 			}
