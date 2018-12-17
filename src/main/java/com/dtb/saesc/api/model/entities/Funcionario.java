@@ -17,7 +17,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.dtb.saesc.api.model.enums.PerfilEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="funcionario")
@@ -43,13 +42,6 @@ public class Funcionario  implements GenericEntity{
 	private Date dataCriacao;
 	@Column(name="data_atualizacao",nullable = false)
 	private Date dataAtualizacao;
-	Funcionario(){
-		
-	}
-	public Funcionario(Long id) {
-		this.id = id;
-	}
-	
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = new Date();
