@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -32,7 +33,8 @@ public class Equipamento implements GenericEntity{
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_status", nullable = false)
 	private EquipamentoStatus status;
-	@OneToMany(mappedBy = "equipamento", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "equipamento", fetch = FetchType.LAZY, targetEntity = EquipamentoHistorico.class)
+	@OrderBy(value = "id DESC")
 	private List<EquipamentoHistorico> historico;
 
 	@ManyToOne(fetch = FetchType.LAZY)
