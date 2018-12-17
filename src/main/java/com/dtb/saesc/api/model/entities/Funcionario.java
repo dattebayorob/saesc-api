@@ -38,12 +38,18 @@ public class Funcionario  implements GenericEntity{
 	private PerfilEnum perfil;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_escola")
-	@JsonIgnore
 	private Escola escola;
 	@Column(name="data_criacao",nullable = false)
 	private Date dataCriacao;
 	@Column(name="data_atualizacao",nullable = false)
 	private Date dataAtualizacao;
+	Funcionario(){
+		
+	}
+	public Funcionario(Long id) {
+		this.id = id;
+	}
+	
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = new Date();

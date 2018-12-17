@@ -23,13 +23,20 @@ public class EquipamentoHistorico implements GenericEntity {
 	private Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_equipamento", nullable = false)
-	@JsonIgnore
 	private Equipamento equipamento;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_funcionario", nullable = false)
 	private Funcionario funcionario;
 	private String comentario;
 	private Date data;
+	public EquipamentoHistorico() {
+		// TODO Auto-generated constructor stub
+	}
+	public EquipamentoHistorico(Equipamento equipamento, Funcionario funcionario, String comentario) {
+		this.equipamento = equipamento;
+		this.funcionario = funcionario;
+		this.comentario = comentario;
+	}
 
 	@Override
 	public Long getId() {

@@ -21,8 +21,11 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EquipamentoCadastroDto;
 import com.dtb.saesc.api.model.dtos.EquipamentoDto;
 import com.dtb.saesc.api.model.entities.Equipamento;
+import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
+import com.dtb.saesc.api.model.entities.Funcionario;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 import com.dtb.saesc.api.model.response.Response;
+import com.dtb.saesc.api.services.EquipamentoHistoricoService;
 import com.dtb.saesc.api.services.EquipamentoService;
 
 @RestController
@@ -30,6 +33,8 @@ import com.dtb.saesc.api.services.EquipamentoService;
 public class EquipamentoController {
 	@Autowired
 	private EquipamentoService equipamentoService;
+	@Autowired
+	private EquipamentoHistoricoService historicoService;
 	@Autowired
 	private EntityDtoConverter<EquipamentoDto, Equipamento> converter;
 	@Autowired
@@ -54,7 +59,7 @@ public class EquipamentoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,@Valid @RequestBody EquipamentoCadastroDto equipamentoCadastroDto,BindingResult result){
-		if(!equipamentoService.hasEquipamento(id)) {
+		if(!equipamentoService.existePorId(id)) {
 			return ResponseEntity.notFound().build();
 		}
 		Optional<Equipamento> equipamentoPeloId = equipamentoService.buscarPeloId(id);
@@ -62,6 +67,7 @@ public class EquipamentoController {
 		if(result.hasErrors()) {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
+		adicionarComentario(new EquipamentoHistorico(equipamento,new Funcionario(Long.valueOf(1)),equipamentoCadastroDto.getComentario()));
 		equipamentoService.persistir(equipamento);
 		return ResponseEntity.ok(Response.data(converter.toDto(equipamento, EquipamentoDto.class)));
 	}
@@ -73,7 +79,13 @@ public class EquipamentoController {
 		}
 		Equipamento equipamento = cadastroConverter.toEntity(equipamentoCadastroDto, Equipamento.class);
 		equipamentoService.persistir(equipamento);
+		adicionarComentario(new EquipamentoHistorico(equipamento,new Funcionario(Long.valueOf(1)),equipamentoCadastroDto.getComentario()));
 		return ResponseEntity.ok(Response.data(cadastroConverter.toDto(equipamento, equipamentoCadastroDto)));
+	}
+	
+	private void adicionarComentario(EquipamentoHistorico historico) {
+		// Por enquanto o Funcionário é passado manualmente
+		historicoService.adicionar(historico);
 	}
 	
 }

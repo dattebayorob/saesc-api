@@ -1,6 +1,10 @@
 package com.dtb.saesc.api.model.dtos;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class EquipamentoHistoricoDto {
 	private Long id;
@@ -10,7 +14,8 @@ public class EquipamentoHistoricoDto {
 	private Long funcionarioId;
 	private String funcionarioNome;
 	private String comentario;
-	private String data;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")	
+	private Date data;
 	public Long getId() {
 		return id;
 	}
@@ -41,10 +46,10 @@ public class EquipamentoHistoricoDto {
 	public void setFuncionarioNome(String funcionarioNome) {
 		this.funcionarioNome = funcionarioNome;
 	}
-	public String getData() {
+	public Date getData() {
 		return data;
 	}
-	public void setData(String data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 	
