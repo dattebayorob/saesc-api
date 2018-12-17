@@ -14,14 +14,13 @@ public class EquipamentoCadastroDtoConverterImpl implements EntityDtoConverter<E
 	private ModelMapper converter;
 	@Override
 	public EquipamentoCadastroDto toDto(Equipamento entity, EquipamentoCadastroDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+		converter.map(entity, dto);
+		return dto;
 	}
 
 	@Override
 	public EquipamentoCadastroDto toDto(Equipamento entity, Class<EquipamentoCadastroDto> cls) {
-		// TODO Auto-generated method stub
-		return null;
+		return converter.map(entity, cls);
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class EquipamentoCadastroDtoConverterImpl implements EntityDtoConverter<E
 
 	@Override
 	public Equipamento toEntity(EquipamentoCadastroDto dto, Class<Equipamento> cls) {
-		return null;
+		return converter.map(dto, cls);
 	}
 	
 }
