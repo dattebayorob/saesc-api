@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Equipamento;
 import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
 import com.dtb.saesc.api.model.repositories.EquipamentoHistoricoRepository;
 import com.dtb.saesc.api.model.repositories.EquipamentoRepository;
+import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 import com.dtb.saesc.api.services.EquipamentoService;
 
 @Service
@@ -33,6 +36,10 @@ public class EquipamentoServiceImpl implements EquipamentoService{
 	@Override
 	public Boolean hasEquipamento(Long id) {
 		return equipamentoRepository.existsById(id);
+	}
+	@Override
+	public Page<Equipamento> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable) {
+		return equipamentoRepository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable);
 	}
 
 }

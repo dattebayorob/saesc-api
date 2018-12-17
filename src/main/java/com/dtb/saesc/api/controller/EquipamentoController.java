@@ -5,6 +5,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EquipamentoCadastroDto;
 import com.dtb.saesc.api.model.dtos.EquipamentoDto;
 import com.dtb.saesc.api.model.entities.Equipamento;
+import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EquipamentoService;
 
@@ -31,6 +34,14 @@ public class EquipamentoController {
 	private EntityDtoConverter<EquipamentoDto, Equipamento> converter;
 	@Autowired
 	private EntityDtoConverter<EquipamentoCadastroDto, Equipamento> cadastroConverter;
+	
+	
+	@GetMapping
+	public ResponseEntity<Response> buscartodos(EquipamentoFilter filter, Pageable pageable){
+		Page<Equipamento> equipamentos = equipamentoService.buscarPaginaPorFiltros(filter, pageable);
+		Page<EquipamentoDto> dto = equipamentos.map(e -> converter.toDto(e, EquipamentoDto.class));
+		return ResponseEntity.ok(Response.data(dto));
+	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id){
