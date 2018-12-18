@@ -9,5 +9,5 @@ public interface FuncionarioService {
 
 	Optional<Funcionario> buscarPeloEmail(String email);
 	
-	Optional<Funcionario> buscarPelaSessao();
+	Funcionario buscarPeloContexto();
 }

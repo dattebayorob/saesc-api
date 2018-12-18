@@ -27,9 +27,9 @@ public class FuncionarioServiceImpl implements FuncionarioService{
 	}
 
 	@Override
-	public Optional<Funcionario> buscarPelaSessao() {
+	public Funcionario buscarPeloContexto() {
 			UserDetails userDetails =
 					 (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			return funcionarioRepository.findByEmail(userDetails.getUsername());
+			return funcionarioRepository.findByEmail(userDetails.getUsername()).get();
 	}
 }

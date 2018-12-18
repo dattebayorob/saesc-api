@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.dtb.saesc.api.model.entities.Equipamento;
+import com.dtb.saesc.api.model.entities.Funcionario;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 
 public interface EquipamentoService {
@@ -13,7 +14,7 @@ public interface EquipamentoService {
 
 	public Page<Equipamento> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable);
 
-	public Equipamento persistir(Equipamento equipamento);
+	public Equipamento persistir(Equipamento equipamento, String comentario, Funcionario funcionario);
 
 	public Boolean existePorId(Long id);
 }

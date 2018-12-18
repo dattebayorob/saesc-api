@@ -8,32 +8,40 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Equipamento;
+import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
+import com.dtb.saesc.api.model.entities.Funcionario;
 import com.dtb.saesc.api.model.repositories.EquipamentoHistoricoRepository;
 import com.dtb.saesc.api.model.repositories.EquipamentoRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 import com.dtb.saesc.api.services.EquipamentoService;
 
 @Service
-public class EquipamentoServiceImpl implements EquipamentoService{
+public class EquipamentoServiceImpl implements EquipamentoService {
 	@Autowired
-	private EquipamentoRepository equipamentoRepository;
+	private EquipamentoRepository repository;
 	@Autowired
 	private EquipamentoHistoricoRepository historicoRepository;
+
 	@Override
 	public Optional<Equipamento> buscarPeloId(Long id) {
-		return equipamentoRepository.findById(id);
+		return repository.findById(id);
 	}
+
 	@Override
-	public Equipamento persistir(Equipamento equipamento) {
-		return equipamentoRepository.save(equipamento);
+	public Equipamento persistir(Equipamento equipamento, String comentario, Funcionario funcionario) {
+		equipamento = repository.save(equipamento);
+		historicoRepository.save(new EquipamentoHistorico(equipamento, funcionario, comentario));
+		return equipamento;
 	}
+
 	@Override
 	public Boolean existePorId(Long id) {
-		return equipamentoRepository.existsById(id);
+		return repository.existsById(id);
 	}
+
 	@Override
 	public Page<Equipamento> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable) {
-		return equipamentoRepository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable);
+		return repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable);
 	}
 
 }
