@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -23,8 +24,10 @@ import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.model.response.Response;
+import com.dtb.saesc.api.model.utils.EnumUtils;
 import com.dtb.saesc.api.services.EscolaService;
 
 @RestController
@@ -66,8 +69,9 @@ public class EscolaController {
 	 */
 
 	private ResponseEntity<Response> responseEntityParaEscolaPaginado(Page<Escola> escolas) {
-		if (!escolas.hasContent())
-			return ResponseEntity.noContent().build();
+		if (!escolas.hasContent()) {
+			return retornoParaNotFound();
+		}
 		Page<EscolaResumidoDto> escolasDto = escolas
 				.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
 		return ResponseEntity.ok(Response.data(escolasDto));
@@ -84,7 +88,7 @@ public class EscolaController {
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
-			return ResponseEntity.notFound().build();
+			return retornoParaNotFound();
 		}
 		EscolaDto escolaDto = converter.toDto(escolaPeloId.get(), EscolaDto.class);
 		return ResponseEntity.ok(Response.data(escolaDto));
@@ -100,15 +104,16 @@ public class EscolaController {
 	 * 
 	 */
 	@PostMapping
-	public ResponseEntity<Response> adicionar(@Valid @RequestBody EscolaDto escolaDto, BindingResult result) {
-		Escola escola = converter.toEntity(escolaDto, Escola.class);
-		validaEscolaInep(escola.getInep(), result);
+	public ResponseEntity<Response> adicionar(@Valid @RequestBody EscolaDto dto, BindingResult result) {
+		Escola escola = converter.toEntity(dto, Escola.class);
+		existeEscolaPeloInep(dto.getInep(), result);
+		verificaPrefixo(dto.getInep(), result);
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
 		}
 		escola = escolaService.persistir(escola);
-		escolaDto = converter.toDto(escola, escolaDto);
-		return ResponseEntity.ok(Response.data(escolaDto));
+		dto = converter.toDto(escola, dto);
+		return ResponseEntity.ok(Response.data(dto));
 
 	}
 
@@ -117,7 +122,7 @@ public class EscolaController {
 			BindingResult result) {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
-			return ResponseEntity.notFound().build();
+			return retornoParaNotFound();
 		}
 		Escola escola = validaEAtualizaEscola(escolaPeloId.get(), escolaDto, result);
 		if (result.hasErrors()) {
@@ -138,11 +143,12 @@ public class EscolaController {
 	 * 
 	 */
 
-	private Escola validaEAtualizaEscola(Escola escola, EscolaDto escolaDto, BindingResult result) {
-		if (!escola.getInep().equals(escolaDto.getInep())) {
-			validaEscolaInep(escolaDto.getInep(), result);
+	private Escola validaEAtualizaEscola(Escola escola, EscolaDto dto, BindingResult result) {
+		if (!escola.getInep().equals(dto.getInep())) {
+			existeEscolaPeloInep(dto.getInep(), result);
 		}
-		return converter.toEntity(escolaDto, escola);
+		verificaPrefixo(dto.getPrefixo(), result);
+		return converter.toEntity(dto, escola);
 	}
 
 	/**
@@ -153,12 +159,19 @@ public class EscolaController {
 	 * 
 	 */
 
-	private void validaEscolaInep(String inep, BindingResult result) {
-		Optional<Escola> escolaPeloInep = escolaService.buscarPeloInep(inep);
-		if (escolaPeloInep.isPresent()) {
-			result.addError(new ObjectError("escola", "Escola já cadastrada com o inep informado"));
-		}
+	private void existeEscolaPeloInep(String inep, BindingResult result) {
+		if (escolaService.existePeloInep(inep))
+			result.addError(new ObjectError("Escola", "Inep já cadastrado"));
+	}
 
+	private void verificaPrefixo(String s, BindingResult result) {
+		if (!EnumUtils.isValid(s, PrefixoEnum.values()))
+			result.addError(new ObjectError("Escola", "Prefixo invalido."));
+	}
+
+	private ResponseEntity<Response> retornoParaNotFound() {
+		String notFoundMsg = "Nenhuma escola encontrada";
+		return new ResponseEntity<Response>(Response.error(notFoundMsg), HttpStatus.NOT_FOUND);
 	}
 
 }
