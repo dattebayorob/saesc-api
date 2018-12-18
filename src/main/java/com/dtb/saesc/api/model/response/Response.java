@@ -3,7 +3,6 @@ package com.dtb.saesc.api.model.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 public class Response {
@@ -15,6 +14,10 @@ public class Response {
 	public Response(Object data) {
 		this.data = data;
 	}
+	public Response(String error) {
+		this.errors = new ArrayList<>();
+		this.errors.add(error);
+	}
 	public static Response data(Object data) {
 		return new Response(data);
 	}
@@ -22,6 +25,9 @@ public class Response {
 		Response response = new Response();
 		errors.forEach(error -> response.getErrors().add(error.getDefaultMessage()));
 		return response;
+	}
+	public static Response error(String error) {
+		return new Response(error);
 	}
 	public Object getData() {
 		return data;
