@@ -13,5 +13,7 @@ public interface EscolaRepository extends JpaRepository<Escola, Long>, EscolaRep
 	Page<Escola> findAll(Pageable pageable);
 
 	Optional<Escola> findByInep(String inep);
+	
+	boolean existsByInep(String inep);
 
 }

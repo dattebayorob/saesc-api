@@ -13,6 +13,8 @@ public interface EscolaService {
 
 	public Optional<Escola> buscarPeloInep(String inep);
 
+	public boolean existePeloInep(String inep);
+	
 	public Escola persistir(Escola escola);
 
 	public Page<Escola> pesquisarEscolas(EscolaFilter filtros, Pageable page);

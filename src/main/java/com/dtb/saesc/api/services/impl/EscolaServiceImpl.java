@@ -37,4 +37,9 @@ public class EscolaServiceImpl implements EscolaService {
 		return escolaRepository.findPageByNomeOrCredeOrPrefixo(filtros, page);
 	}
 
+	@Override
+	public boolean existePeloInep(String inep) {
+		return escolaRepository.existsByInep(inep);
+	}
+
 }
