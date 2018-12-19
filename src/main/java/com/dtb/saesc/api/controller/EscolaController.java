@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -105,6 +106,8 @@ public class EscolaController {
 	 * @param EscolaDto
 	 * @param result
 	 * 
+	 * @return ResponseEntity<Response>
+	 * 
 	 */
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Validated @RequestBody EscolaDto dto) {
@@ -116,7 +119,7 @@ public class EscolaController {
 		}
 
 		dto = converter.toDto(escola, dto);
-		return ResponseEntity.ok(Response.data(dto));
+		return new ResponseEntity<Response>(Response.data(dto), HttpStatus.CREATED);
 
 	}
 	
@@ -139,7 +142,8 @@ public class EscolaController {
 		}
 
 		try {
-			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()),escolaPeloId.get());
+			String inep = escolaPeloId.get().getInep();
+			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()),inep);
 			dto = converter.toDto(escola, dto);
 		} catch (ValidationErrorsException e) {
 			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));

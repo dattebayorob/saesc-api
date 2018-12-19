@@ -63,7 +63,7 @@ public interface EscolaService {
 	 * Atualizar uma entidade Escola no banco de dados
 	 * 
 	 * @param escola
-	 * @param escolaAntiga
+	 * @param inep
 	 * 
 	 * @return Escola
 	 * 
@@ -71,7 +71,7 @@ public interface EscolaService {
 	 * 
 	 **/
 
-	public Escola atualizar(Escola escola, Escola antiga);
+	public Escola atualizar(Escola escola, String inep);
 	
 	/**
 	 * 

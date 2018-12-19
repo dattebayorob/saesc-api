@@ -1,7 +1,6 @@
 package com.dtb.saesc.api.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,33 +32,19 @@ public class EscolaServiceImpl implements EscolaService {
 
 	@Override
 	public Escola adicionar(Escola escola) {
-		if (!validarCadastro(escola).isEmpty())
-			throw new ValidationErrorsException(validarCadastro(escola));
+		if (this.existePeloInep(escola.getInep())) {
+			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Escola", "Inep já cadastrado")));
+		}
 		return escolaRepository.save(escola);
 	}
 
 	@Override
-	public Escola atualizar(Escola escola, Escola antiga) {
-		List<ObjectError> erros = validarAtualizacao(escola, antiga);
-		if (!erros.isEmpty())
-			throw new ValidationErrorsException(erros);
-		return escolaRepository.save(escola);
-	}
-
-	private List<ObjectError> validarCadastro(Escola escola) {
-		List<ObjectError> erros = new ArrayList<ObjectError>();
-		if (this.existePeloInep(escola.getInep()))
-			erros.add(new ObjectError("Escola", "Inep já cadastrado"));
-		return erros;
-	}
-
-	private List<ObjectError> validarAtualizacao(Escola escola, Escola escolaAntiga) {
-		List<ObjectError> erros = new ArrayList<>();
-		if (!escolaAntiga.getInep().equals(escola.getInep())) {
-			if (existePeloInep(escola.getInep()))
-				erros.add(new ObjectError("Escola", "Inep já cadastrado"));
+	public Escola atualizar(Escola escola, String inep) {
+		if (!escola.getInep().equals(inep)) {
+			if (this.existePeloInep(inep))
+				throw new ValidationErrorsException(Arrays.asList(new ObjectError("Escola", "Inep já cadastrado")));
 		}
-		return erros;
+		return escolaRepository.save(escola);
 	}
 
 	@Override
