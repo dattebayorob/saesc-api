@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.ProvedorDto;
 import com.dtb.saesc.api.model.entities.Provedor;
+import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.ProvedorService;
 
@@ -34,11 +35,8 @@ public class ProvedorController {
 	private EntityDtoConverter<ProvedorDto, Provedor> converter;
 
 	@PostMapping
-	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
+	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto) {
 		Provedor provedor = converter.toEntity(provedorDto, new Provedor());
-		if (result.hasErrors()) {
-			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
-		}
 		provedorService.persistir(provedor);
 		return ResponseEntity.ok(Response.data(converter.toDto(provedor, provedorDto)));
 	}
@@ -46,23 +44,18 @@ public class ProvedorController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Provedor> provedorById = provedorService.buscarPeloId(id);
-		if (!provedorById.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
+		if (!provedorById.isPresent())
+			throw new ResourceNotFoundException("Nenhum provedor encontrado");
 		return ResponseEntity.ok(Response.data(converter.toDto(provedorById.get(),new ProvedorDto())));
 	}
 
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,
-			@Valid @RequestBody ProvedorDto provedorDto, BindingResult result) {
+			@Valid @RequestBody ProvedorDto provedorDto) {
 		Optional<Provedor> provedorById = provedorService.buscarPeloId(id);
-		if (!provedorById.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		if (result.hasErrors()) {
-			return ResponseEntity.badRequest().body(Response.error(result.getAllErrors()));
-		}
+		if (!provedorById.isPresent())
+			throw new ResourceNotFoundException("Nenhum provedor encontrado");
 		Provedor provedor = converter.toEntity(provedorDto, provedorById.get());
 		provedorService.persistir(provedor);
 		return ResponseEntity.ok(Response.data(provedorDto));
@@ -71,9 +64,8 @@ public class ProvedorController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> removerPeloId(@PathVariable("id") Long id) {
 		Optional<Provedor> provedor = provedorService.buscarPeloId(id);
-		if (!provedor.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
+		if (!provedor.isPresent())
+			throw new ResourceNotFoundException("Nenhum provedor encontrado");
 		provedorService.removerPeloId(id);
 		return ResponseEntity.noContent().build();
 	}

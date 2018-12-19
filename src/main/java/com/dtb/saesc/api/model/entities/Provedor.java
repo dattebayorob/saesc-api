@@ -11,9 +11,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-
 @Entity
 @Table(name="link_provedor")
 public class Provedor implements GenericEntity{
@@ -26,6 +23,11 @@ public class Provedor implements GenericEntity{
 	private Date dataCriacao;
 	@Column(name="data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
+	public Provedor() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	@Override
 	public Long getId() {
 		return id;
