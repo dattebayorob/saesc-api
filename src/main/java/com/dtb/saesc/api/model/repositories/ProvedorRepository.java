@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dtb.saesc.api.model.entities.Provedor;
 
-public interface ProvedorRepository extends JpaRepository<Provedor, Long>{
+public interface ProvedorRepository extends JpaRepository<Provedor, Long> {
+	boolean existsByCnpj(String cnpj);
 
+	boolean existsById(Long id);
 }
