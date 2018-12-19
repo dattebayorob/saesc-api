@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +42,8 @@ public class EscolaServiceImpl implements EscolaService {
 	}
 
 	@Override
-	public Escola atualizar(Escola escola, Escola escolaAntiga) {
-		List<ObjectError> erros = validarAtualizacao(escola, escolaAntiga);
+	public Escola atualizar(Escola escola, Escola antiga) {
+		List<ObjectError> erros = validarAtualizacao(escola, antiga);
 		if (!erros.isEmpty())
 			throw new ValidationErrorsException(erros);
 		return escolaRepository.save(escola);
@@ -58,9 +57,9 @@ public class EscolaServiceImpl implements EscolaService {
 		return erros;
 	}
 
-	private List<ObjectError> validarAtualizacao(Escola escolaAntiga, Escola escola) {
+	private List<ObjectError> validarAtualizacao(Escola escola, Escola escolaAntiga) {
 		List<ObjectError> erros = new ArrayList<>();
-		if (!escola.getInep().equals(escolaAntiga.getInep())) {
+		if (!escolaAntiga.getInep().equals(escola.getInep())) {
 			if (existePeloInep(escola.getInep()))
 				erros.add(new ObjectError("Escola", "Inep já cadastrado"));
 		}
@@ -69,10 +68,14 @@ public class EscolaServiceImpl implements EscolaService {
 	}
 
 	private void validar(Escola escola, List<ObjectError> erros) {
-		if(!EnumUtils.isValid(escola.getPrefixo().toString(), PrefixoEnum.values()))
-			erros.add(new ObjectError("Escola","Prefixo invalido."));
-		if(!EnumUtils.isValid(escola.getCrede().toString(), CredeEnum.values()))
-			erros.add(new ObjectError("Escola", "Crede invalida."));
+		try {
+			if (!EnumUtils.isValid(escola.getPrefixo().toString(), PrefixoEnum.values()))
+				erros.add(new ObjectError("Escola", "Prefixo invalido."));
+			if (!EnumUtils.isValid(escola.getCrede().toString(), CredeEnum.values()))
+				erros.add(new ObjectError("Escola", "Crede invalida."));
+		} catch (Exception e) {
+			erros.add(new ObjectError("Escola", "Prefixo ou Enum Invalido"));
+		}
 	}
 
 	@Override

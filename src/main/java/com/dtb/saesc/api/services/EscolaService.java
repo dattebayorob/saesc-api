@@ -71,7 +71,7 @@ public interface EscolaService {
 	 * 
 	 **/
 
-	public Escola atualizar(Escola escolaAntiga, Escola escola);
+	public Escola atualizar(Escola escola, Escola antiga);
 	
 	/**
 	 * 

@@ -24,6 +24,7 @@ import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
+import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
@@ -138,8 +139,7 @@ public class EscolaController {
 		}
 
 		try {
-			// Com problema no Put...
-			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()), escolaPeloId.get());
+			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()),escolaPeloId.get());
 			dto = converter.toDto(escola, dto);
 		} catch (ValidationErrorsException e) {
 			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));

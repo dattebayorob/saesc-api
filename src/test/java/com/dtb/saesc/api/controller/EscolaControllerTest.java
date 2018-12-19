@@ -1,5 +1,10 @@
 package com.dtb.saesc.api.controller;
 
+import static org.junit.Assert.assertFalse;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Hibernate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +19,7 @@ import com.dtb.saesc.api.services.EscolaService;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@Transactional
 public class EscolaControllerTest {
 	@Autowired
 	private EscolaService service;
@@ -25,17 +31,20 @@ public class EscolaControllerTest {
 	@Before
 	public void init() {
 		EscolaDto dto = new EscolaDto();
-		dto.setInep("");
-		dto.setNome("");
-		dto.setPrefixo("");
-		dto.setCrede("");
+		dto.setInep("00000030");
+		dto.setNome("Escola de Testes");
+		dto.setPrefixo("EEFM");
+		dto.setCrede("SEFOR_1");
 		this.dto = dto;
-		this.escola = converter.toEntity(dto, Escola.class);
 	}
 
 
 	@Test
 	public void testValidationWithoutResult() {
 		
+	}
+	
+	@Test
+	public void testConversaoEntidadeDtoNoPut() {
 	}
 }

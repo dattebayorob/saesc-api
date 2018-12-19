@@ -1,24 +1,30 @@
 package com.dtb.saesc.api.model.dtos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.ObjectError;
 
 import com.dtb.saesc.api.model.entities.GenericEntity;
+import com.dtb.saesc.api.model.enums.CredeEnum;
+import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
+import com.dtb.saesc.api.model.utils.EnumUtils;
 
 public class EscolaDto implements GenericEntity{
 	private Long id;
+	@NotNull(message = "Prefixo deve ser informado.")
 	private String prefixo;
-	@NotEmpty(message = "O nome da escola deve ser informado.")
+	@NotNull(message = "O nome da escola deve ser informado.")
 	private String nome;
-	@NotEmpty(message = "O inep da escola deve ser informado.")
+	@NotNull(message = "O inep da escola deve ser informado.")
 	@Length(min = 6, max = 8, message = "O Inep da escola deve conter entre 3 e 8 caracteres.")
 	private String inep;
 	private List<LinkDto> links;
-	@NotEmpty(message = "A crede da escola deve ser informada.")
+	@NotNull(message = "A crede da escola deve ser informada.")
 	private String crede;
 	private String rua;
 	private String bairro;
@@ -73,6 +79,8 @@ public class EscolaDto implements GenericEntity{
 	}
 
 	public void setCrede(String crede) {
+		if(!EnumUtils.isValid(crede, CredeEnum.values()))
+			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Escola", "Crede invalida")));
 		this.crede = crede;
 	}
 

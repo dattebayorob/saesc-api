@@ -1,5 +1,6 @@
 package com.dtb.saesc.api.model.converters.impl;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class EntityDtoConverterImpl<Dto extends GenericEntity,Entity extends Gen
 	@Override
 	public Entity toEntity(Dto dto, Entity entity) {
 		dto.setId(entity.getId());
+		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 		modelMapper.map(dto, entity);
 		return entity;
 	}
