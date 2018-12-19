@@ -11,12 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.enums.CredeEnum;
-import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
-import com.dtb.saesc.api.model.utils.EnumUtils;
 import com.dtb.saesc.api.services.EscolaService;
 
 @Service
@@ -53,7 +50,6 @@ public class EscolaServiceImpl implements EscolaService {
 		List<ObjectError> erros = new ArrayList<ObjectError>();
 		if (this.existePeloInep(escola.getInep()))
 			erros.add(new ObjectError("Escola", "Inep já cadastrado"));
-		validar(escola, erros);
 		return erros;
 	}
 
@@ -63,19 +59,7 @@ public class EscolaServiceImpl implements EscolaService {
 			if (existePeloInep(escola.getInep()))
 				erros.add(new ObjectError("Escola", "Inep já cadastrado"));
 		}
-		validar(escola, erros);
 		return erros;
-	}
-
-	private void validar(Escola escola, List<ObjectError> erros) {
-		try {
-			if (!EnumUtils.isValid(escola.getPrefixo().toString(), PrefixoEnum.values()))
-				erros.add(new ObjectError("Escola", "Prefixo invalido."));
-			if (!EnumUtils.isValid(escola.getCrede().toString(), CredeEnum.values()))
-				erros.add(new ObjectError("Escola", "Crede invalida."));
-		} catch (Exception e) {
-			erros.add(new ObjectError("Escola", "Prefixo ou Enum Invalido"));
-		}
 	}
 
 	@Override
