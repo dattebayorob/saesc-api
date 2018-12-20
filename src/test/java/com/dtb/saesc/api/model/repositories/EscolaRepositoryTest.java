@@ -38,8 +38,6 @@ public class EscolaRepositoryTest {
 	@Test
 	public void testBuscarPaginaPeloNomeComCriteriaBuilder() {
 		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
-		//if (es.hasContent())
-			//es.forEach(e -> System.out.println("Pagina Com CriteriaBuilder -> " + e.getInep()));
 		assertTrue(es.hasContent());
 	}
 
