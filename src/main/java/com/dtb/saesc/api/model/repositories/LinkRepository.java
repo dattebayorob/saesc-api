@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.dtb.saesc.api.model.entities.Link;
 
 public interface LinkRepository extends JpaRepository<Link, Long> {
-	List<Link> findByEscolaId(@Param("idEscola") Long idEscola);
+	List<Link> findByEscolaId(Long idEscola);
 
 	@Query(value = "SELECT l FROM Link l WHERE l.ip like %:ip%")
 	List<Link> findAllByIp(@Param("ip") String ip);

@@ -24,28 +24,22 @@ public class LinkController {
 	private EntityDtoConverter<LinkDto, Link> converter;
 	@Autowired
 	private LinkService linkService;
-	
+
 	@GetMapping
-	public ResponseEntity<Response> buscarLinks(@RequestParam(name = "s", defaultValue = "") String s){
-		List<Link> links = linkService.buscarLinks(s);
-		List<LinkDto> dto = new ArrayList<>();
-		links.forEach(link -> dto.add(converter.toDto(link, LinkDto.class)));
-		return ResponseEntity.ok(Response.data(dto));
-	}
-	
-	@GetMapping("/escola/{id}")
-	public ResponseEntity<Response> buscarLinksPorEscola(@PathVariable("id") Long idEscola){
-		
-		List<Link> links = linkService.buscarPorescola(idEscola);
-		if(links.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		List<LinkDto> linksDto = new ArrayList<>();
-		links.forEach(link -> linksDto.add(converterLinkParaDto(link)));
-		return ResponseEntity.ok(Response.data(linksDto));
+	public ResponseEntity<Response> buscarLinks(@RequestParam(name = "s", defaultValue = "") String s) {
+		List<LinkDto> dtos = new ArrayList<>();
+		linkService.buscarLinks(s).forEach(link -> dtos.add(converter.toDto(link, LinkDto.class)));
+		return dtos.isEmpty()?
+				ResponseEntity.noContent().build():
+				ResponseEntity.ok(Response.data(dtos));
 	}
 
-	private LinkDto converterLinkParaDto(Link link) {
-		return converter.toDto(link, LinkDto.class);
+	@GetMapping("/escola/{id}")
+	public ResponseEntity<Response> buscarLinksPorEscola(@PathVariable("id") Long idEscola) {
+		List<LinkDto> dtos = new ArrayList<>();
+		linkService.buscarPorescola(idEscola).forEach(link -> dtos.add(converter.toDto(link, LinkDto.class)));
+		return dtos.isEmpty()?
+				ResponseEntity.noContent().build():
+				ResponseEntity.ok(Response.data(dtos));
 	}
 }
