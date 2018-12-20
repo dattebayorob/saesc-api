@@ -35,7 +35,7 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	}
 
 	@Override
-	public Boolean existePorId(Long id) {
+	public Boolean existePeloId(Long id) {
 		return repository.existsById(id);
 	}
 

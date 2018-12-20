@@ -16,5 +16,5 @@ public interface EquipamentoService {
 
 	public Equipamento persistir(Equipamento equipamento, String comentario, Funcionario funcionario);
 
-	public Boolean existePorId(Long id);
+	public Boolean existePeloId(Long id);
 }
