@@ -8,11 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Equipamento;
-import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
 import com.dtb.saesc.api.model.entities.Funcionario;
-import com.dtb.saesc.api.model.repositories.EquipamentoHistoricoRepository;
 import com.dtb.saesc.api.model.repositories.EquipamentoRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
+import com.dtb.saesc.api.services.EquipamentoHistoricoService;
 import com.dtb.saesc.api.services.EquipamentoService;
 
 @Service
@@ -20,7 +19,7 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	@Autowired
 	private EquipamentoRepository repository;
 	@Autowired
-	private EquipamentoHistoricoRepository historicoRepository;
+	private EquipamentoHistoricoService historicoService;
 
 	@Override
 	public Optional<Equipamento> buscarPeloId(Long id) {
@@ -30,7 +29,7 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	@Override
 	public Equipamento persistir(Equipamento equipamento, String comentario, Funcionario funcionario) {
 		equipamento = repository.save(equipamento);
-		historicoRepository.save(new EquipamentoHistorico(equipamento, funcionario, comentario));
+		historicoService.adicionar(equipamento, funcionario, comentario);
 		return equipamento;
 	}
 
