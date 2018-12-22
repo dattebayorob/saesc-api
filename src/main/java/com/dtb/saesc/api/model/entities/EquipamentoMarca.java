@@ -15,7 +15,12 @@ public class EquipamentoMarca implements GenericEntity {
 	private Long id;
 	@Column(nullable = false, unique = true)
 	private String nome;
-
+	public EquipamentoMarca() {
+		// TODO Auto-generated constructor stub
+	}
+	public EquipamentoMarca(Long id) {
+		this.id = id;
+	}
 	@Override
 	public Long getId() {
 		return id;

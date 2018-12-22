@@ -26,7 +26,9 @@ public class Provedor implements GenericEntity{
 	public Provedor() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	public Provedor(Long id) {
+		this.id = id;
+	}
 	
 	@Override
 	public Long getId() {

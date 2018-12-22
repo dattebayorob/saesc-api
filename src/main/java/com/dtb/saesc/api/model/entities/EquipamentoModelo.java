@@ -28,7 +28,12 @@ public class EquipamentoModelo implements GenericEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private EquipamentoTipoEnum tipo;
-
+	public EquipamentoModelo() {
+		// TODO Auto-generated constructor stub
+	}
+	public EquipamentoModelo(Long id) {
+		this.id = id;
+	}
 	@Override
 	public Long getId() {
 		return id;

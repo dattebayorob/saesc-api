@@ -13,7 +13,12 @@ public class EquipamentoStatus implements GenericEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-
+	public EquipamentoStatus() {
+		// TODO Auto-generated constructor stub
+	}
+	public EquipamentoStatus(Long id) {
+		this.id = id;
+	}
 	@Override
 	public Long getId() {
 		return id;

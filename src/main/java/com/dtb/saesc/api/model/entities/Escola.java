@@ -49,6 +49,9 @@ public class Escola implements GenericEntity {
 	public Escola() {
 		// TODO Auto-generated constructor stub
 	}
+	public Escola(Long id) {
+		this.id = id;
+	}
 	
 	@Override
 	public Long getId() {

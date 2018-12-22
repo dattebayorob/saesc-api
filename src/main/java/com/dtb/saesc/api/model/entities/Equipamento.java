@@ -48,6 +48,9 @@ public class Equipamento implements GenericEntity{
 	public Equipamento() {
 		// TODO Auto-generated constructor stub
 	}
+	public Equipamento(Long id) {
+		this.id = id;
+	}
 
 	@PreUpdate
 	public void preUpdate() {

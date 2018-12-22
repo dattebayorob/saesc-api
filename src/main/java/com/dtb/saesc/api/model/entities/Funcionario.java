@@ -42,6 +42,12 @@ public class Funcionario  implements GenericEntity{
 	private Date dataCriacao;
 	@Column(name="data_atualizacao",nullable = false)
 	private Date dataAtualizacao;
+	public Funcionario() {
+		// TODO Auto-generated constructor stub
+	}
+	public Funcionario(Long id) {
+		this.id = id;
+	}
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = new Date();
