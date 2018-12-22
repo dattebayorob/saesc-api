@@ -15,8 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.EquipamentoMarca;
 import com.dtb.saesc.api.model.entities.EquipamentoModelo;
-import com.dtb.saesc.api.model.repositories.utils.AdicionarMarca;
-import com.dtb.saesc.api.model.repositories.utils.AdicionarModelo;
+import com.dtb.saesc.api.model.enums.EquipamentoTipoEnum;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -24,25 +23,24 @@ import com.dtb.saesc.api.model.repositories.utils.AdicionarModelo;
 public class EquipamentoModeloRepositoryTest {
 	@Autowired
 	private EquipamentoModeloRepository repository;
-	@Autowired
-	private EquipamentoMarcaRepository marcaRepo;
 	private EquipamentoModelo modelo;
-	private EquipamentoMarca marca;
 	
 	@Before
 	public void init() {
-		marca = marcaRepo.save(AdicionarMarca.set("Marca Fake"));
-		modelo = repository.save(AdicionarModelo.set(marca));
+		modelo = new EquipamentoModelo();
+		modelo.setNome("Modelo Fake");
+		modelo.setMarca(new EquipamentoMarca(Long.valueOf(1)));
+		modelo.setTipo(EquipamentoTipoEnum.COMPUTADOR);
+		modelo = repository.save(modelo); // Já existe uma marca de Id 1 cadastrada
 	}
 	@After
 	public void finish() {
-		repository.deleteAll();
-		marcaRepo.deleteAll();
+		
 	}
 	
 	@Test
-	public void testSave() {
-		assertNotNull(repository.save(AdicionarModelo.set(marca)));
+	public void testSaveInit() {
+		assertNotNull(modelo.getId());
 	}
 	@Test
 	public void testFindAll() {

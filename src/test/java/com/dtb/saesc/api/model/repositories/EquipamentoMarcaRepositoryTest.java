@@ -2,7 +2,6 @@ package com.dtb.saesc.api.model.repositories;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.EquipamentoMarca;
-import com.dtb.saesc.api.model.repositories.utils.AdicionarMarca;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -20,25 +18,21 @@ import com.dtb.saesc.api.model.repositories.utils.AdicionarMarca;
 public class EquipamentoMarcaRepositoryTest {
 	@Autowired
 	private EquipamentoMarcaRepository repository;
-	private static Long ID;
+	private EquipamentoMarca marca;
 	
 	@Before
 	public void init() {
-		EquipamentoMarca marca = repository.save(AdicionarMarca.set("fake"));
-		ID = marca.getId();
-	}
-	
-	@After
-	public void finish() {
-		repository.deleteAll();
+		marca = new EquipamentoMarca();
+		marca.setNome("Fake Marca "+(int) (Math.random()*1000)); //Prevent duplicate unique key 
+		repository.save(marca);
 	}
 	
 	@Test
 	public void testSave() {
-		assertNotNull(repository.save(AdicionarMarca.set("fake 2")));
+		assertNotNull(marca.getId());
 	}
 	@Test
 	public void testFindById() {
-		assertNotNull(repository.findById(ID).get());
+		assertNotNull(repository.findById(marca.getId()).get());
 	}
 }
