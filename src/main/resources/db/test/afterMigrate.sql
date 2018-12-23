@@ -1,3 +1,8 @@
+--CLEAN UP
+DROP TABLE IF EXISTS test.escola,test.escola_link ,test.link_provedor,test.equipamento,
+ test.equipamento_historico,test.equipamento_modelo,test.equipamento_marca,
+ test.equipamento_status,test.funcionario CASCADE;
+ 
 CREATE TABLE test.escola(
 	id BIGSERIAL PRIMARY KEY,
 	prefixo VARCHAR(10),
@@ -40,14 +45,12 @@ CREATE TABLE test.funcionario(
 INSERT INTO test.link_provedor(nome,data_criacao) VALUES('Oi',CURRENT_DATE);
 INSERT INTO test.link_provedor(nome,data_criacao) VALUES('ETICE',CURRENT_DATE);
 INSERT INTO test.escola(nome,crede,inep,data_criacao,data_atualizacao)
- VALUES('SEDUC','SEDUC','00000000',CURRENT_DATE,CURRENT_DATE);
-INSERT INTO test.escola_link(ip,id_provedor,id_escola)
- VALUES('200.217.200.xxx','1','1');
+ VALUES('FAKE','SEFOR_1','fakeinep',CURRENT_DATE,CURRENT_DATE);
 INSERT INTO test.escola_link(ip,id_provedor,id_escola)
  VALUES('172.24.42.xx','2','1');
 INSERT INTO test.funcionario(nome,cpf,email,senha,perfil,id_escola,data_criacao,data_atualizacao) 
- VALUES('Robson William','00000000000','robson.william65@gmail.com',
- 	'$2a$10$iqpnKvFQvKlBWghd5iw6X.v50j9QY7AgCceSEKB0hbvmA83IAofCS','ROLE_TECNICO','1',CURRENT_DATE,CURRENT_DATE);
+ VALUES('FAKE','fakecpf','fake@fake',
+ 	'fake','ROLE_USUARIO','1',CURRENT_DATE,CURRENT_DATE);
 CREATE TABLE test.equipamento_marca(
 	id BIGSERIAL PRIMARY KEY,
 	nome VARCHAR(30) UNIQUE NOT NULL
@@ -62,7 +65,7 @@ CREATE TABLE test.equipamento_status(
 	id BIGSERIAL PRIMARY KEY,
 	nome VARCHAR(255) NOT NULL
 );
-INSERT INTO test.equipamento_status(nome) VALUES('RECEBIDO'),('EM MANUTENÇÃO'),('EM HOMOLOGAÇÃO'),('AGUARDANDO ENTREGA'),('ENTREGUE');
+INSERT INTO test.equipamento_status(nome) VALUES('FAKE STATUS');
 
 CREATE TABLE test.equipamento(
 	id BIGSERIAL PRIMARY KEY,
@@ -83,10 +86,10 @@ CREATE TABLE test.equipamento_historico(
 	comentario TEXT,
 	data DATE NOT NULL
 );
-INSERT INTO test.equipamento_marca(nome)VALUES('DELL');
+INSERT INTO test.equipamento_marca(nome)VALUES('FAKE MARCA');
 INSERT INTO test.equipamento_modelo(nome,id_marca,tipo)
-	VALUES('OPTIPLEX 780','1','COMPUTADOR');
-INSERT INTO test.equipamento(id_modelo,id_escola,descricao,data_criacao)
-	VALUES('1','1','Equipamento de Testes 1',CURRENT_DATE,1);
+	VALUES('FAKE 20','1','COMPUTADOR');
+INSERT INTO test.equipamento(id_modelo,id_escola,descricao,data_criacao,id_status)
+	VALUES('1','1','FAKE EQUIPAMENTO',CURRENT_DATE,1);
 INSERT INTO test.equipamento_historico(id_equipamento,id_funcionario,data)
 	VALUES('1','1',CURRENT_DATE);
