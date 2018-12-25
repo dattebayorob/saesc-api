@@ -33,6 +33,8 @@ public class ProvedorController {
 	private ProvedorService provedorService;
 	@Autowired
 	private EntityDtoConverter<ProvedorDto, Provedor> converter;
+	
+	private static final String PROVEDOR_NAO_ENCONTRADO = "Nenhum provedor encontrado";
 
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto) {
@@ -49,7 +51,7 @@ public class ProvedorController {
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Provedor> provedorById = provedorService.buscarPeloId(id);
 		if (!provedorById.isPresent())
-			throw new ResourceNotFoundException("Nenhum provedor encontrado");
+			throw new ResourceNotFoundException(PROVEDOR_NAO_ENCONTRADO);
 		return ResponseEntity.ok(Response.data(converter.toDto(provedorById.get(), new ProvedorDto())));
 	}
 
@@ -58,10 +60,10 @@ public class ProvedorController {
 			@Valid @RequestBody ProvedorDto dto) {
 		Optional<Provedor> provedorPeloId = provedorService.buscarPeloId(id);
 		if (!provedorPeloId.isPresent())
-			throw new ResourceNotFoundException("Nenhum provedor encontrado");
+			throw new ResourceNotFoundException(PROVEDOR_NAO_ENCONTRADO);
 		try {
 			String cnpj = provedorPeloId.get().getCnpj();
-			Provedor provedor = provedorService.atualizar(converter.toEntity(dto, provedorPeloId.get()), cnpj);
+			provedorService.atualizar(converter.toEntity(dto, provedorPeloId.get()), cnpj);
 		} catch (ValidationErrorsException e) {
 			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
 		}
@@ -71,7 +73,7 @@ public class ProvedorController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> removerPeloId(@PathVariable("id") Long id) {
 		if (provedorService.existePeloId(id))
-			throw new ResourceNotFoundException("Nenhum provedor encontrado");
+			throw new ResourceNotFoundException(PROVEDOR_NAO_ENCONTRADO);
 		provedorService.removerPeloId(id);
 		return ResponseEntity.noContent().build();
 	}
