@@ -47,6 +47,6 @@ public class EscolaServiceTest {
 	
 	@Test //(expected = ValidationErrorsException.class)
 	public void testAdicionarComInepEmUso() {
-		Escola escola = service.adicionar(this.escola);
+		service.adicionar(this.escola);
 	}
 }

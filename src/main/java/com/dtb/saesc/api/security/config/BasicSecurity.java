@@ -23,11 +23,6 @@ public class BasicSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth)
       throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        
-          /*.inMemoryAuthentication()
-          .withUser("admin")
-            .password("$2a$10$KnMisxgCqONRa3iO57d62.s7BptTTbrrlMKZJo.xcpb.dQrjFlqNK")
-            .roles("USER","ADMIN");*/
     }
  
     @Override
@@ -42,7 +37,7 @@ public class BasicSecurity extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.csrf().disable();;
+			.csrf().disable();
     }
     @Bean
 	public PasswordEncoder passwordEncoder() {
@@ -52,7 +47,6 @@ public class BasicSecurity extends WebSecurityConfigurerAdapter {
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-		// TODO Auto-generated method stub
 		return super.authenticationManagerBean();
 	}
 }

@@ -1,6 +1,6 @@
 package com.dtb.saesc.api.model.converters;
 
-public interface EntityDtoConverter<Dto, Entity> {
+public interface EntityDtoConverter<D, E> {
 	/**
 	 * Converte uma entidade para um dto com ModelMapper Neste metodo entity é o
 	 * source e dto é o destino
@@ -11,7 +11,7 @@ public interface EntityDtoConverter<Dto, Entity> {
 	 * @return dto
 	 * 
 	 */
-	public Dto toDto(Entity entity, Dto dto);
+	public D toDto(E entity, D dto);
 
 	/**
 	 * Converte uma entidade para um dto com Model Mapper. Neste metodo entity é o
@@ -23,7 +23,7 @@ public interface EntityDtoConverter<Dto, Entity> {
 	 * @return dto
 	 * 
 	 */
-	public Dto toDto(Entity entity, Class<Dto> cls);
+	public D toDto(E entity, Class<D> cls);
 
 	/**
 	 * Converte um dto para uma entidade com Model Mapper. Neste metodo dto é o
@@ -36,7 +36,7 @@ public interface EntityDtoConverter<Dto, Entity> {
 	 * 
 	 */
 
-	public Entity toEntity(Dto dto, Entity entity);
+	public E toEntity(D dto, E entity);
 
 	/**
 	 * 
@@ -49,5 +49,5 @@ public interface EntityDtoConverter<Dto, Entity> {
 	 * @return entity
 	 * 
 	 */
-	public Entity toEntity(Dto dto, Class<Entity> cls);
+	public E toEntity(D dto, Class<E> cls);
 }

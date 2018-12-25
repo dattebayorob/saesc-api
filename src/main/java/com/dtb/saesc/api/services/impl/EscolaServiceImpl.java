@@ -40,10 +40,8 @@ public class EscolaServiceImpl implements EscolaService {
 
 	@Override
 	public Escola atualizar(Escola escola, String inep) {
-		if (!escola.getInep().equals(inep)) {
-			if (this.existePeloInep(inep))
-				throw new ValidationErrorsException(Arrays.asList(new ObjectError("Escola", "Inep já cadastrado")));
-		}
+		if (!escola.getInep().equals(inep) && this.existePeloInep(inep))
+			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Escola", "Inep já cadastrado")));
 		return escolaRepository.save(escola);
 	}
 

@@ -1,5 +1,6 @@
 package com.dtb.saesc.api.model.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,7 +21,11 @@ import com.dtb.saesc.api.model.enums.PerfilEnum;
 
 @Entity
 @Table(name="funcionario")
-public class Funcionario  implements GenericEntity{
+public class Funcionario  implements GenericEntity,Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2939392759109282898L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

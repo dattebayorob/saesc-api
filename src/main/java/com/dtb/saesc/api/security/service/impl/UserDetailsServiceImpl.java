@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private FuncionarioService funcionarioService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username){
 		Optional<Funcionario> f = funcionarioService.buscarPeloEmail(username);
 		if (!f.isPresent())
 			throw new UsernameNotFoundException("Email não encontrado" + username);

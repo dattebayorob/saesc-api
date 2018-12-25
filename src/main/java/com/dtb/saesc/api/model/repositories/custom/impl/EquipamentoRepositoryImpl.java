@@ -63,8 +63,7 @@ public class EquipamentoRepositoryImpl implements EquipamentoRepositoryQuery {
 			predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dataCriacao"),
 					Date.from(filter.getCriadoAte().atStartOfDay(ZoneId.systemDefault()).toInstant())));
 		}
-		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
-		return p;
+		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
 }

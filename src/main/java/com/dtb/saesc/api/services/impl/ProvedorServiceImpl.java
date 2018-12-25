@@ -36,10 +36,8 @@ public class ProvedorServiceImpl implements ProvedorService {
 
 	@Override
 	public Provedor atualizar(Provedor provedor, String cnpj) {
-		if (!provedor.getCnpj().equals(cnpj)) {
-			if (this.existePeloCnpj(provedor.getCnpj()))
-				throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor", "Cnpj já cadastrado")));
-		}
+		if (!provedor.getCnpj().equals(cnpj) && this.existePeloCnpj(provedor.getCnpj()))
+			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor", "Cnpj já cadastrado")));
 		return repository.save(provedor);
 	}
 
@@ -47,7 +45,7 @@ public class ProvedorServiceImpl implements ProvedorService {
 	public boolean existePeloCnpj(String cnpj) {
 		return repository.existsByCnpj(cnpj);
 	}
-	
+
 	@Override
 	public boolean existePeloId(Long id) {
 		return repository.existsById(id);

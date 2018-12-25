@@ -80,7 +80,7 @@ public class EquipamentoController {
 		return ResponseEntity.ok(Response.data(converter.toDto(equipamento, EquipamentoDto.class)));
 	}
 
-	private Funcionario buscarFuncionarioContext() throws UsernameNotFoundException{
+	private Funcionario buscarFuncionarioContext(){
 		return userService.buscarPeloContexto();
 	}
 
