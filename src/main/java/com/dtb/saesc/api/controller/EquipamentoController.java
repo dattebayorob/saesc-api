@@ -39,6 +39,8 @@ public class EquipamentoController {
 	@Autowired
 	private EntityDtoConverter<EquipamentoCadastroDto, Equipamento> cadastroConverter;
 
+	private static final String EQUIP_NAO_ENCONTRADO = "Equipamento não encontrado pro id ";
+
 	@GetMapping
 	public ResponseEntity<Response> buscartodos(EquipamentoFilter filter, Pageable pageable) {
 		Page<EquipamentoDto> dtos = equipamentoService.buscarPaginaPorFiltros(filter, pageable)
@@ -50,7 +52,7 @@ public class EquipamentoController {
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Equipamento> equipamentoPeloId = equipamentoService.buscarPeloId(id);
 		if (!equipamentoPeloId.isPresent())
-			throw new ResourceNotFoundException("Equipamento não encontrado pro id " + id);
+			throw new ResourceNotFoundException(EQUIP_NAO_ENCONTRADO + id);
 		EquipamentoDto equipamentoDto = converter.toDto(equipamentoPeloId.get(), EquipamentoDto.class);
 		return ResponseEntity.ok(Response.data(equipamentoDto));
 	}
@@ -59,10 +61,14 @@ public class EquipamentoController {
 	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,
 			@Valid @RequestBody EquipamentoCadastroDto dto) {
 		if (!equipamentoService.existePeloId(id))
-			throw new ResourceNotFoundException("Equipamento não encontrado pro id " + id);
+			throw new ResourceNotFoundException(EQUIP_NAO_ENCONTRADO + id);
 		Optional<Equipamento> equipamentoPeloId = equipamentoService.buscarPeloId(id);
-		Equipamento equipamento = equipamentoService.persistir(cadastroConverter.toEntity(dto, equipamentoPeloId.get()),
-				dto.getComentario(), buscarFuncionarioContext());
+		Equipamento equipamento = equipamentoService
+				.persistir(
+						cadastroConverter.toEntity(dto,
+								equipamentoPeloId
+										.orElseThrow(() -> new ResourceNotFoundException(EQUIP_NAO_ENCONTRADO))),
+						dto.getComentario(), buscarFuncionarioContext());
 		return ResponseEntity.ok(Response.data(converter.toDto(equipamento, EquipamentoDto.class)));
 	}
 
