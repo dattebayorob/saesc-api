@@ -25,7 +25,6 @@ import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
-import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.services.EscolaService;
@@ -40,6 +39,8 @@ public class EscolaController {
 	private EntityDtoConverter<EscolaDto, Escola> converter;
 	@Autowired
 	private EntityDtoConverter<EscolaResumidoDto, Escola> converterResumido;
+	
+	private static final String ESCOLA_NAO_ENCONTRADA = "Escola não encontrada para o Id informado.";
 
 	/**
 	 * Retorna todas as escolas paginadas de acordo com o criterio de pesquisa
@@ -72,7 +73,7 @@ public class EscolaController {
 
 	private ResponseEntity<Response> responseEntityParaEscolaPaginado(Page<Escola> escolas) {
 		if (!escolas.hasContent()) {
-			throw new ResourceNotFoundException("Escola não encontrada para o Id informado.");
+			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
 		}
 		Page<EscolaResumidoDto> escolasDto = escolas
 				.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
@@ -92,7 +93,7 @@ public class EscolaController {
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
-			throw new ResourceNotFoundException("Escola não encontrada para o Id informado.");
+			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
 		}
 		EscolaDto escolaDto = converter.toDto(escolaPeloId.get(), EscolaDto.class);
 		return ResponseEntity.ok(Response.data(escolaDto));
@@ -119,31 +120,31 @@ public class EscolaController {
 		}
 
 		dto = converter.toDto(escola, dto);
-		return new ResponseEntity<Response>(Response.data(dto), HttpStatus.CREATED);
+		return new ResponseEntity<>(Response.data(dto), HttpStatus.CREATED);
 
 	}
-	
+
 	/**
 	 * 
 	 * Atualiza uma escola
 	 * 
-	 * @param id;
+	 * @param     id;
 	 * @param dto
 	 * 
 	 * @throws ResourceNotFoundException
 	 * 
-	 * */
+	 */
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Valid @RequestBody EscolaDto dto) {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
-			throw new ResourceNotFoundException("Escola não encontrada para o Id informado.");
+			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
 		}
 
 		try {
 			String inep = escolaPeloId.get().getInep();
-			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()),inep);
+			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()), inep);
 			dto = converter.toDto(escola, dto);
 		} catch (ValidationErrorsException e) {
 			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
