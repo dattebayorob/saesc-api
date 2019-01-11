@@ -20,12 +20,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.Equipamento;
-import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
 import com.dtb.saesc.api.model.entities.EquipamentoStatus;
 import com.dtb.saesc.api.model.entities.Funcionario;
-import com.dtb.saesc.api.model.repositories.EquipamentoHistoricoRepository;
 import com.dtb.saesc.api.model.repositories.EquipamentoRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
+import com.dtb.saesc.api.services.EquipamentoHistoricoService;
 import com.dtb.saesc.api.services.EquipamentoService;
 
 @SpringBootTest
@@ -35,7 +34,7 @@ public class EquipamentoServiceTest {
 	@MockBean
 	private EquipamentoRepository repository;
 	@MockBean
-	private EquipamentoHistoricoRepository historicoRepository;
+	private EquipamentoHistoricoService historicoService;
 
 	@Autowired
 	private EquipamentoService service;
@@ -49,8 +48,7 @@ public class EquipamentoServiceTest {
 		equipamento.setStatus(new EquipamentoStatus(Long.valueOf(1)));
 		equipamento.getStatus().setNome("someShit");
 		BDDMockito.given(repository.save(Mockito.any())).willReturn(new Equipamento());
-		BDDMockito.given(historicoRepository.save(Mockito.any()))
-				.willReturn(new EquipamentoHistorico(equipamento, new Funcionario(), "someShit"));
+		BDDMockito.doNothing().when(historicoService).adicionar(Mockito.any(), Mockito.any(), Mockito.any());
 		BDDMockito.given(repository.existsById(Mockito.anyLong())).willReturn(true);
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(equipamento));
 		BDDMockito.given(repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(
