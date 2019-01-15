@@ -1,0 +1,1 @@
+ALTER TABLE equipamento_historico ALTER COLUMN data TYPE TIMESTAMP;

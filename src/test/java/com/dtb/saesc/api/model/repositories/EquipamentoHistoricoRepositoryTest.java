@@ -1,7 +1,10 @@
 package com.dtb.saesc.api.model.repositories;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +36,14 @@ public class EquipamentoHistoricoRepositoryTest {
 	@Test
 	public void testSave() {
 		assertNotNull(historico.getId());
+	}
+	@Test
+	public void testSaveWithFullDate() {
+		Date dataAtual = new Date();
+		EquipamentoHistorico historicoNovo = repository.save(new EquipamentoHistorico(new Equipamento(Long.valueOf(1)),new Funcionario(Long.valueOf(1)),
+				"Comentario do dia "+dataAtual.toString()));
+		assertEquals(dataAtual, historicoNovo.getData());
+		assertNotNull(historicoNovo.getId());
 	}
 	@Test
 	public void testDeleteAndFindById() {
