@@ -14,7 +14,7 @@ public class EquipamentoHistoricoDto {
 	private Long funcionarioId;
 	private String funcionarioNome;
 	private String comentario;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:MM")	
 	private Date data;
 	public Long getId() {
 		return id;
