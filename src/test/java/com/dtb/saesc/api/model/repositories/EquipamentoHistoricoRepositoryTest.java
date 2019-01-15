@@ -42,7 +42,7 @@ public class EquipamentoHistoricoRepositoryTest {
 		Date dataAtual = new Date();
 		EquipamentoHistorico historicoNovo = repository.save(new EquipamentoHistorico(new Equipamento(Long.valueOf(1)),new Funcionario(Long.valueOf(1)),
 				"Comentario do dia "+dataAtual.toString()));
-		assertEquals(dataAtual, historicoNovo.getData());
+		assertEquals(dataAtual.toString(), historicoNovo.getData().toString());
 		assertNotNull(historicoNovo.getId());
 	}
 	@Test
