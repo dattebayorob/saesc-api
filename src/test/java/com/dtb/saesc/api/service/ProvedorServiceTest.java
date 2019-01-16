@@ -60,16 +60,28 @@ public class ProvedorServiceTest {
 	public void testAdicionar() {
 		assertNotNull(service.adicionar(new Provedor()));
 	}
-
+	
+	@Test(expected = ValidationErrorsException.class)
+	public void testAdicionarComCnpjJaEmUso() {
+		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
+		service.adicionar(provedor);
+	}
+	
 	@Test
 	public void testAtualizar() {
-		assertNotNull(service.atualizar(provedor, "blabla").getId());
+		assertNotNull(service.atualizar(provedor, "00000000000000").getId());
+	}
+	
+	@Test
+	public void testAtualizarComCnpjSemUso() {
+		provedor.setCnpj("someNewCnpj");
+		assertNotNull(service.atualizar(provedor, "00000000000000"));
 	}
 
 	@Test(expected = ValidationErrorsException.class)
 	public void testAtualizarComCnpjJaEmUso() {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
-		service.atualizar(provedor, "someNewCnpj");
+		service.atualizar(provedor, "someOldCnpj");
 	}
 
 	@Test
