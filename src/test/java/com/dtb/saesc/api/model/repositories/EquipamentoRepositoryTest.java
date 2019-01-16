@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,12 +38,14 @@ public class EquipamentoRepositoryTest {
 	private EquipamentoFilter filter;
 	private Pageable page;
 	private Equipamento equipamento;
+	private static final Log log = LogFactory.getLog(EquipamentoRepositoryTest.class);
 	private static final LocalDate DATA_LOCALDATE = LocalDate.now();
 	private static final Date DATA_DATE = new Date();
 	private static final Long MODELO = null;
 
 	@Before
 	public void init() {
+		log.info("Instanciação e Persistencia inicial pros testes");
 		filter = new EquipamentoFilter();
 		page = PageRequest.of(0, 10, Direction.ASC, "id");
 		equipamento = new Equipamento();
@@ -49,6 +54,11 @@ public class EquipamentoRepositoryTest {
 		equipamento.setModelo(new EquipamentoModelo(Long.valueOf(1)));
 		equipamento.setDescricao("Fake equipamento descricao");
 		repository.save(equipamento);
+	}
+	@After
+	public void finish() {
+		log.info("Removendo entidade de testes");
+		repository.deleteById(equipamento.getId());
 	}
 	
 	@Test

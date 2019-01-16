@@ -4,6 +4,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +29,8 @@ import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 public class EscolaRepositoryTest {
 	@Autowired
 	private EscolaRepository repository;
-
+	
+	private static final Log log = LogFactory.getLog(EscolaRepositoryTest.class);
 	private static final String SEARCH_CRITERIA = "";
 	private static final String SEARCH_CREDE = "";
 	private static final String SEARCH_PREFIXO = "";
@@ -37,6 +41,7 @@ public class EscolaRepositoryTest {
 
 	@Before
 	public void init() {
+		log.info("Instanciação e Persistencia inicial pros testes");
 		this.filter = new EscolaFilter(SEARCH_CRITERIA, SEARCH_CREDE, SEARCH_PREFIXO);
 		this.page = PageRequest.of(0, 20, Direction.ASC, "id");
 		escola = new Escola();
@@ -44,6 +49,11 @@ public class EscolaRepositoryTest {
 		escola.setNome("FAKE ESCOLA");
 		escola.setInep("inep_"+(int)(Math.random()*1000));
 		repository.save(escola);
+	}
+	@After
+	public void finish() {
+		log.info("Removendo entidade persistida no teste");
+		repository.deleteById(escola.getId());
 	}
 	@Test
 	public void testSave() {

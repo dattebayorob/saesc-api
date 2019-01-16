@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +29,22 @@ public class LinkRepositoryTest {
 	private LinkRepository repository;
 	
 	private Link link;
+	private static final Log log = LogFactory.getLog(LinkRepositoryTest.class);
 	private static final Long ID_ESCOLA = Long.valueOf(1);
 	private static final String IP = "172"; // If null, all links will be returned.
 	
 	@Before
 	public void init() {
+		log.info("Instanciação e Persistencia inicial pros testes");
 		link = new Link();
 		link.setEscola(new Escola(Long.valueOf(1)));
 		link.setIp("172.xxx.xxx.xx1");
 		link.setProvedor(new Provedor(Long.valueOf(1)));
 		repository.save(link);
+	}
+	@After()
+	public void finish() {
+		log.info("Entidade removida no test, não há o que deletar");
 	}
 	@Test
 	public void testSave() {

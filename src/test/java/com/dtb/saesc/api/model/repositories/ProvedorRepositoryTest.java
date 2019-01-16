@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,11 +26,13 @@ public class ProvedorRepositoryTest {
 	@Autowired
 	private ProvedorRepository repository;
 	
+	private static final Log log = LogFactory.getLog(ProvedorRepositoryTest.class);
 	private static Long ID;
 	private static String CNPJ;
 	private Provedor provedor;
 	@Before
 	public void init() {
+		log.info("Instanciando entidade inicial pros testes");
 		provedor = new Provedor();
 		provedor.setCnpj("00000000000000");
 		provedor.setNome("Provedor de Testes");

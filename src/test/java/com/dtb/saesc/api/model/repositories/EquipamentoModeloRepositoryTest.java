@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,19 +25,24 @@ import com.dtb.saesc.api.model.enums.EquipamentoTipoEnum;
 public class EquipamentoModeloRepositoryTest {
 	@Autowired
 	private EquipamentoModeloRepository repository;
+	
+	private static final Log log = LogFactory.getLog(EquipamentoModeloRepositoryTest.class);
+	
 	private EquipamentoModelo modelo;
 	
 	@Before
 	public void init() {
+		log.info("Instanciação e Persistencia inicial pros testes");
 		modelo = new EquipamentoModelo();
 		modelo.setNome("Modelo Fake");
 		modelo.setMarca(new EquipamentoMarca(Long.valueOf(1)));
 		modelo.setTipo(EquipamentoTipoEnum.COMPUTADOR);
-		modelo = repository.save(modelo); // Já existe uma marca de Id 1 cadastrada
+		modelo = repository.save(modelo);
 	}
 	@After
 	public void finish() {
-		
+		log.info("Removendo entidade de testes");
+		repository.deleteById(modelo.getId());
 	}
 	
 	@Test
