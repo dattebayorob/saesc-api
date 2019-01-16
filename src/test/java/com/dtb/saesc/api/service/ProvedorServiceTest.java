@@ -47,6 +47,7 @@ public class ProvedorServiceTest {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(false);
 		BDDMockito.given(repository.existsById(Mockito.anyLong())).willReturn(true);
 		BDDMockito.given(repository.save(Mockito.any())).willReturn(provedor);
+		BDDMockito.doNothing().when(repository).deleteById(Mockito.anyLong());
 	}
 
 	@Test
@@ -57,7 +58,7 @@ public class ProvedorServiceTest {
 
 	@Test
 	public void testAdicionar() {
-		assertNotNull(repository.save(new Provedor()));
+		assertNotNull(service.adicionar(new Provedor()));
 	}
 
 	@Test
@@ -83,6 +84,8 @@ public class ProvedorServiceTest {
 
 	@Test
 	public void testRemoverPeloId() {
-		// Não há o que testar
+		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(null));
+		service.removerPeloId(provedor.getId());
+		assertFalse(service.buscarPeloId(provedor.getId()).isPresent());
 	}
 }
