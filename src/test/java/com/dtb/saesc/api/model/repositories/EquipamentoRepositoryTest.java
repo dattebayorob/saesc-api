@@ -4,8 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,14 +32,14 @@ import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 public class EquipamentoRepositoryTest {
 	@Autowired
 	private EquipamentoRepository repository;
-	
+
 	private EquipamentoFilter filter;
 	private Pageable page;
 	private Equipamento equipamento;
 	private static final Log log = LogFactory.getLog(EquipamentoRepositoryTest.class);
 	private static final LocalDate DATA_LOCALDATE = LocalDate.now();
-	private static final Date DATA_DATE = new Date();
-	private static final Long MODELO = null;
+	private static final Long MODELO = Long.valueOf(2);
+	private static final String DESCRICAO = "Fake";
 
 	@Before
 	public void init() {
@@ -51,73 +49,63 @@ public class EquipamentoRepositoryTest {
 		equipamento = new Equipamento();
 		equipamento.setEscola(new Escola(Long.valueOf(1)));
 		equipamento.setStatus(new EquipamentoStatus(Long.valueOf(1)));
-		equipamento.setModelo(new EquipamentoModelo(Long.valueOf(1)));
-		equipamento.setDescricao("Fake equipamento descricao");
+		equipamento.setModelo(new EquipamentoModelo(Long.valueOf(2)));
+		equipamento.setDescricao("Fake equipamento descricao com modelo 2");
 		repository.save(equipamento);
 	}
+
 	@After
 	public void finish() {
 		log.info("Removendo entidade de testes");
 		repository.deleteById(equipamento.getId());
 	}
-	
+
 	@Test
 	public void testSave() {
+		log.info("Testando repository.save");
 		assertNotNull(equipamento.getId());
 	}
+
 	@Test
 	public void testFindById() {
+		log.info("Testando repository.findById com id " + equipamento.getId());
 		assertNotNull(repository.findById(equipamento.getId()).get());
 	}
-	
-	@Test
-	public void testConversaoLocalDateParaDate() {
-		LocalDate date = DATA_DATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		assertTrue(DATA_LOCALDATE.equals(date));
-	}
 
-	/**
-	 * 
-	 * Testa se as entidades serão retornadas Caso o filtro seja nulo, será como se
-	 * não houvesse filtro algum
-	 * 
-	 */
+	@Test
+	public void testBuscarPaginaSemFiltro() {
+		log.info("Testando Criteria Query sem filtros");
+		Page<Equipamento> equipamentos = buscarPagina("Sem filtros: ");
+		assertTrue(equipamentos.hasContent());
+	}
 
 	@Test
 	public void testBuscarPaginaPelaDescricao() {
+		log.info("Testando Criteria Query com a descrição: " + DESCRICAO);
+		filter.setDescricao(DESCRICAO);
 		Page<Equipamento> equipamentos = buscarPagina("Por Descrição: ");
 		assertTrue(equipamentos.hasContent());
 	}
 
-	/**
-	 * 
-	 * Testa se as entidades serão retornadas dado modeloId
-	 * 
-	 */
-
 	@Test
 	public void testBuscarPaginaPeloModelo() {
-		this.filter.setModeloId(MODELO);
+		log.info("Testando Criteria Query com o modelo de id: " + MODELO);
+		filter.setModeloId(MODELO);
 		Page<Equipamento> equipamentos = buscarPagina("Por Modelo Id: ");
 		assertTrue(equipamentos.hasContent());
 	}
 
-	/**
-	 * 
-	 * Testa se as entidades serão retornadas a partir da data de criação
-	 * 
-	 */
-
 	@Test
 	public void testBuscarPorDataInicial() {
-		this.filter.setCriadoDe(DATA_LOCALDATE);
+		log.info("Testando Criteria Query com a data: " + DATA_LOCALDATE);
+		filter.setCriadoDe(DATA_LOCALDATE);
 		Page<Equipamento> equipamentos = buscarPagina("Por Data Inicial: ");
 		assertTrue(equipamentos.hasContent());
 	}
 
 	private Page<Equipamento> buscarPagina(String string) {
-		Page<Equipamento> equipamentos = repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(this.filter,
-				this.page);
+		Page<Equipamento> equipamentos = repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter,
+				page);
 		if (equipamentos.hasContent())
 			equipamentos.forEach(e -> System.out.println(string + e.getDescricao()));
 		return equipamentos;
