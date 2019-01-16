@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.enums.CredeEnum;
+import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 
 @SpringBootTest
@@ -31,9 +32,9 @@ public class EscolaRepositoryTest {
 	private EscolaRepository repository;
 	
 	private static final Log log = LogFactory.getLog(EscolaRepositoryTest.class);
-	private static final String SEARCH_CRITERIA = "";
-	private static final String SEARCH_CREDE = "";
-	private static final String SEARCH_PREFIXO = "";
+	private static final String SEARCH_CRITERIA = "FAKE";
+	private static final String SEARCH_CREDE = "SEFOR_2";
+	private static final String SEARCH_PREFIXO = "EEFM";
 
 	private EscolaFilter filter;
 	private Pageable page;
@@ -42,10 +43,11 @@ public class EscolaRepositoryTest {
 	@Before
 	public void init() {
 		log.info("Instanciação e Persistencia inicial pros testes");
-		this.filter = new EscolaFilter(SEARCH_CRITERIA, SEARCH_CREDE, SEARCH_PREFIXO);
-		this.page = PageRequest.of(0, 20, Direction.ASC, "id");
+		filter = new EscolaFilter();
+		page = PageRequest.of(0, 20, Direction.ASC, "id");
 		escola = new Escola();
 		escola.setCrede(CredeEnum.SEFOR_2);
+		escola.setPrefixo(PrefixoEnum.valueOf("EEFM"));
 		escola.setNome("FAKE ESCOLA");
 		escola.setInep("inep_"+(int)(Math.random()*1000));
 		repository.save(escola);
@@ -63,12 +65,38 @@ public class EscolaRepositoryTest {
 	public void testFindById() {
 		assertNotNull(repository.findById(escola.getId()).get());
 	}
-
+	
 	@Test
-	public void testFindPageByNomeOrCredeOrPrefixo() {
+	public void testFindPageWithoutFilter() {
 		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
 		assertTrue(es.hasContent());
 	}
+	
+	@Test
+	public void testFindPageByNome() {
+		filter.setNome(SEARCH_CRITERIA);
+		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		assertTrue(es.hasContent());
+	}
+	@Test
+	public void testFindPageByCrede() {
+		filter.setPrefixo(SEARCH_CREDE);
+		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		assertTrue(es.hasContent());
+	}
+	@Test
+	public void testFindPageByPrefixo() {
+		filter.setPrefixo(SEARCH_PREFIXO);
+		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		assertTrue(es.hasContent());
+	}
+
+	@Test
+	public void testFindPageByNomeOrCredeOrPrefixo() {
+		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(new EscolaFilter(SEARCH_CRITERIA, SEARCH_CREDE, SEARCH_PREFIXO), page);
+		assertTrue(es.hasContent());
+	}
+	
 	@Test
 	public void testFindPagebyNomeOrCredeOrPrefixo_WithWrongFilter() {
 		filter.setNome("NOME TRILOCAO QUE NUM VAI EXISITR");
