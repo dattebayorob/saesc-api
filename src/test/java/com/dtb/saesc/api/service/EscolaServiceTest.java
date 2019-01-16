@@ -84,6 +84,13 @@ public class EscolaServiceTest {
 		assertNotNull(service.atualizar(escola, escola.getInep()).getInep());
 	}
 	
+	@Test
+	public void testAtualizarComInepSemUso() {
+		String inep = escola.getInep();
+		escola.setInep("someNewInep");
+		assertNotNull(service.atualizar(escola, inep));
+	}
+	
 	@Test(expected = ValidationErrorsException.class)
 	public void testAtualizarComInepEmUso() {
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(true);
