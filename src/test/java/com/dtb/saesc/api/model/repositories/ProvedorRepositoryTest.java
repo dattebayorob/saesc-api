@@ -34,13 +34,14 @@ public class ProvedorRepositoryTest {
 	public void init() {
 		log.info("Instanciando entidade inicial pros testes");
 		provedor = new Provedor();
-		provedor.setCnpj("00000000000000");
-		provedor.setNome("Provedor de Testes");
+		provedor.setCnpj("00000000000001");
+		provedor.setNome("Provedor de Testes 1");
+		repository.save(provedor);
 	}
 	
 	@Test
 	public void testSave() {
-		ID = repository.save(provedor).getId();
+		ID = provedor.getId();
 		CNPJ = provedor.getCnpj();
 		assertNotNull(ID);
 	}
