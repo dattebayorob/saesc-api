@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -13,9 +12,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.util.StringUtils;
 
 import com.dtb.saesc.api.model.entities.Escola;
@@ -34,6 +31,14 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Escola> criteriaQuery = criteriaBuilder.createQuery(Escola.class);
 		Root<Escola> root = criteriaQuery.from(Escola.class);
+		Predicate[] p = generatePredicates(filter, criteriaBuilder, root);
+		criteriaQuery.where(p);
+		List<Escola> escolas = em.createQuery(criteriaQuery).setFirstResult((int) pageable.getOffset())
+				.setMaxResults(pageable.getPageSize()).getResultList();
+		return new PageImpl<>(escolas, pageable, escolas.size());
+	}
+
+	private Predicate[] generatePredicates(EscolaFilter filter, CriteriaBuilder criteriaBuilder, Root<Escola> root) {
 		List<Predicate> predicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(filter.getNome())) {
 			predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")),
@@ -48,12 +53,7 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 					criteriaBuilder.equal(root.get("prefixo"), PrefixoEnum.valueOf(filter.getPrefixo().toUpperCase())));
 		}
 		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
-		criteriaQuery.where(p);
-		TypedQuery<Escola> tq = em.createQuery(criteriaQuery);
-		tq.setFirstResult((int)pageable.getOffset());
-		tq.setMaxResults(pageable.getPageSize());
-		List<Escola> escolas = tq.getResultList();
-		return new PageImpl<>(escolas, pageable, escolas.size());
+		return p;
 	}
 
 }

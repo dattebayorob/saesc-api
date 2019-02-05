@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -34,10 +33,8 @@ public class EquipamentoRepositoryImpl implements EquipamentoRepositoryQuery {
 		Root<Equipamento> root = criteriaQuery.from(Equipamento.class);
 		Predicate[] p = generatePredicates(filter, criteriaBuilder, root);
 		criteriaQuery.where(p);
-		TypedQuery<Equipamento> typedQuery = em.createQuery(criteriaQuery);
-		typedQuery.setFirstResult((int)pageable.getOffset());
-		typedQuery.setMaxResults(pageable.getPageSize());
-		List<Equipamento> equipamentos = typedQuery.getResultList();
+		List<Equipamento> equipamentos = em.createQuery(criteriaQuery).setFirstResult((int) pageable.getOffset())
+				.setMaxResults(pageable.getPageSize()).getResultList();
 		return new PageImpl<>(equipamentos, pageable, equipamentos.size());
 	}
 
