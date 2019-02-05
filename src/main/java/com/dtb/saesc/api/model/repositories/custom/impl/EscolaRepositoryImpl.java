@@ -13,7 +13,9 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.util.StringUtils;
 
 import com.dtb.saesc.api.model.entities.Escola;
@@ -48,6 +50,8 @@ public class EscolaRepositoryImpl implements EscolaRepositoryQuery {
 		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
 		criteriaQuery.where(p);
 		TypedQuery<Escola> tq = em.createQuery(criteriaQuery);
+		tq.setFirstResult((int)pageable.getOffset());
+		tq.setMaxResults(pageable.getPageSize());
 		List<Escola> escolas = tq.getResultList();
 		return new PageImpl<>(escolas, pageable, escolas.size());
 	}

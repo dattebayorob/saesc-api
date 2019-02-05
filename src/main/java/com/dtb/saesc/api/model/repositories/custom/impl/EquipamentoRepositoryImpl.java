@@ -35,6 +35,8 @@ public class EquipamentoRepositoryImpl implements EquipamentoRepositoryQuery {
 		Predicate[] p = generatePredicates(filter, criteriaBuilder, root);
 		criteriaQuery.where(p);
 		TypedQuery<Equipamento> typedQuery = em.createQuery(criteriaQuery);
+		typedQuery.setFirstResult((int)pageable.getOffset());
+		typedQuery.setMaxResults(pageable.getPageSize());
 		List<Equipamento> equipamentos = typedQuery.getResultList();
 		return new PageImpl<>(equipamentos, pageable, equipamentos.size());
 	}
