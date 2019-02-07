@@ -1,3 +1,10 @@
 language: java
 jdk:
   - oraclejdk8
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+before_script:
+  - psql -c "CREATE USER teste WITH PASSWORD 'teste'" -U postgres
+  - psql -c 'CREATE DATABASE saescapi OWNER teste' -U postgres
