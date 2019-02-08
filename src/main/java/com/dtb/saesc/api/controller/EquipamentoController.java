@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dtb.saesc.api.model.converters.EntityDtoConverter;
 import com.dtb.saesc.api.model.dtos.EquipamentoCadastroDto;
 import com.dtb.saesc.api.model.dtos.EquipamentoDto;
+import com.dtb.saesc.api.model.dtos.EquipamentoResumidoDto;
 import com.dtb.saesc.api.model.entities.Equipamento;
 import com.dtb.saesc.api.model.entities.Funcionario;
 import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
@@ -39,13 +39,15 @@ public class EquipamentoController {
 	private EntityDtoConverter<EquipamentoDto, Equipamento> converter;
 	@Autowired
 	private EntityDtoConverter<EquipamentoCadastroDto, Equipamento> cadastroConverter;
+	@Autowired
+	private EntityDtoConverter<EquipamentoResumidoDto, Equipamento> resumidoConverter;
 
 	private static final String EQUIP_NAO_ENCONTRADO = "Equipamento não encontrado pro id ";
 
 	@GetMapping
 	public ResponseEntity<Response> buscartodos(EquipamentoFilter filter, Pageable pageable) {
-		Page<EquipamentoDto> dtos = equipamentoService.buscarPaginaPorFiltros(filter, pageable)
-				.map(e -> converter.toDto(e, EquipamentoDto.class));
+		Page<EquipamentoResumidoDto> dtos = equipamentoService.buscarPaginaPorFiltros(filter, pageable)
+				.map(e -> resumidoConverter.toDto(e, EquipamentoResumidoDto.class));
 		return dtos.hasContent() ? ResponseEntity.ok(Response.data(dtos)) : ResponseEntity.noContent().build();
 	}
 
