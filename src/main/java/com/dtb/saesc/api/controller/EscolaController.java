@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +41,9 @@ public class EscolaController {
 	private EntityDtoConverter<EscolaDto, Escola> converter;
 	@Autowired
 	private EntityDtoConverter<EscolaResumidoDto, Escola> converterResumido;
-	
+
 	private static final String ESCOLA_NAO_ENCONTRADA = "Escola não encontrada para o Id informado.";
+	private static final String INEP_JA_CADASTRADO = "Inep já cadastrado";
 
 	/**
 	 * Retorna todas as escolas paginadas de acordo com o criterio de pesquisa
@@ -108,18 +111,15 @@ public class EscolaController {
 	 * @param result
 	 * 
 	 * @return ResponseEntity<Response>
+	 * @throws MethodArgumentNotValidException
 	 * 
 	 */
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Validated @RequestBody EscolaDto dto) {
 		Escola escola = converter.toEntity(dto, Escola.class);
-		try {
-			escola = escolaService.adicionar(escola);
-		} catch (ValidationErrorsException e) {
-			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
-		}
-
-		dto = converter.toDto(escola, dto);
+		Optional<Escola> e = escolaService.adicionar(escola);
+		dto = converter.toDto(
+				e.orElseThrow(() -> new ValidationErrorsException(new ObjectError("Escola", INEP_JA_CADASTRADO))), dto);
 		return new ResponseEntity<>(Response.data(dto), HttpStatus.CREATED);
 
 	}
@@ -130,25 +130,24 @@ public class EscolaController {
 	 * 
 	 * @param     id;
 	 * @param dto
+	 * @throws MethodArgumentNotValidException
 	 * 
 	 * @throws ResourceNotFoundException
 	 * 
 	 */
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Valid @RequestBody EscolaDto dto) {
+	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Valid @RequestBody EscolaDto dto)
+			throws MethodArgumentNotValidException {
 		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
 		if (!escolaPeloId.isPresent()) {
 			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
 		}
-
-		try {
-			String inep = escolaPeloId.get().getInep();
-			Escola escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()), inep);
-			dto = converter.toDto(escola, dto);
-		} catch (ValidationErrorsException e) {
-			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
-		}
+		String inep = escolaPeloId.get().getInep();
+		Optional<Escola> escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()), inep);
+		dto = converter.toDto(
+				escola.orElseThrow(() -> new ValidationErrorsException(new ObjectError("Escola", INEP_JA_CADASTRADO))),
+				dto);
 
 		return ResponseEntity.ok(Response.data(dto));
 	}

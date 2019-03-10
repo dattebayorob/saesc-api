@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 
 public interface EscolaService {
@@ -50,13 +50,14 @@ public interface EscolaService {
 	 * 
 	 * @param escola
 	 * @return Escola
+	 * @throws MethodArgumentNotValidException 
 	 * 
 	 * @throws ValidationErrorsException
 	 * 
 	 * 
 	 */
 
-	public Escola adicionar(Escola escola);
+	public Optional<Escola> adicionar(Escola escola);
 
 	/**
 	 * 
@@ -66,12 +67,13 @@ public interface EscolaService {
 	 * @param inep
 	 * 
 	 * @return Escola
+	 * @throws MethodArgumentNotValidException 
 	 * 
 	 * @throws ValidationErrorsException
 	 * 
 	 **/
 
-	public Escola atualizar(Escola escola, String inep);
+	public Optional<Escola> atualizar(Escola escola, String inep);
 	
 	/**
 	 * 

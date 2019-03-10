@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.Escola;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 import com.dtb.saesc.api.model.repositories.EscolaRepository;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.services.EscolaService;
@@ -73,28 +72,28 @@ public class EscolaServiceTest {
 		assertNotNull(service.adicionar(new Escola()));
 	}
 	
-	@Test(expected = ValidationErrorsException.class)
+	@Test
 	public void testAdicionarComInepEmUso() {
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(true);
-		service.adicionar(this.escola);
+		assertFalse(service.adicionar(this.escola).isPresent());
 	}
 	
 	@Test
 	public void testAtualizar() {
-		assertNotNull(service.atualizar(escola, escola.getInep()).getInep());
+		assertNotNull(service.atualizar(escola, escola.getInep()).get().getInep());
 	}
 	
 	@Test
 	public void testAtualizarComInepSemUso() {
 		String inep = escola.getInep();
 		escola.setInep("someNewInep");
-		assertNotNull(service.atualizar(escola, inep));
+		assertTrue(service.atualizar(escola, inep).isPresent());
 	}
 	
-	@Test(expected = ValidationErrorsException.class)
+	@Test
 	public void testAtualizarComInepEmUso() {
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(true);
-		service.atualizar(escola, "someinep");
+		assertFalse(service.atualizar(escola, "someinep").isPresent());
 	}
 	
 	@Test

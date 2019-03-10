@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,18 +34,17 @@ public class ProvedorController {
 	private ProvedorService provedorService;
 	@Autowired
 	private EntityDtoConverter<ProvedorDto, Provedor> converter;
-	
+
 	private static final String PROVEDOR_NAO_ENCONTRADO = "Nenhum provedor encontrado";
+	private static final String CNPJ_JA_CADASTRADO = "Cnpj já cadastrado";
 
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Valid @RequestBody ProvedorDto provedorDto) {
 		Provedor provedor = converter.toEntity(provedorDto, new Provedor());
-		try {
-			provedorService.adicionar(provedor);
-		} catch (ValidationErrorsException e) {
-			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
-		}
-		return ResponseEntity.ok(Response.data(converter.toDto(provedor, provedorDto)));
+		return ResponseEntity.ok(Response.data(converter.toDto(
+				provedorService.adicionar(provedor).orElseThrow(
+						() -> new ValidationErrorsException(new ObjectError("Provedor", CNPJ_JA_CADASTRADO))),
+				provedorDto)));
 	}
 
 	@GetMapping("/{id}")
@@ -56,23 +56,21 @@ public class ProvedorController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id,
-			@Valid @RequestBody ProvedorDto dto) {
+	public ResponseEntity<Response> atualizarPeloId(@PathVariable("id") Long id, @Valid @RequestBody ProvedorDto dto) {
 		Optional<Provedor> provedorPeloId = provedorService.buscarPeloId(id);
 		if (!provedorPeloId.isPresent())
 			throw new ResourceNotFoundException(PROVEDOR_NAO_ENCONTRADO);
-		try {
-			String cnpj = provedorPeloId.get().getCnpj();
-			provedorService.atualizar(converter.toEntity(dto, provedorPeloId.get()), cnpj);
-		} catch (ValidationErrorsException e) {
-			return ResponseEntity.badRequest().body(Response.error(e.getErrors()));
-		}
-		return ResponseEntity.ok(Response.data(dto));
+		String cnpj = provedorPeloId.get().getCnpj();
+		Optional<Provedor> provedor = provedorService.atualizar(converter.toEntity(dto, provedorPeloId.get()), cnpj);
+		return ResponseEntity.ok(Response.data(converter.toDto(
+				provedor.orElseThrow(
+						() -> new ValidationErrorsException(new ObjectError("Provedor", CNPJ_JA_CADASTRADO))),
+				ProvedorDto.class)));
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> removerPeloId(@PathVariable("id") Long id) {
-		if (provedorService.existePeloId(id))
+		if (! provedorService.existePeloId(id))
 			throw new ResourceNotFoundException(PROVEDOR_NAO_ENCONTRADO);
 		provedorService.removerPeloId(id);
 		return ResponseEntity.noContent().build();

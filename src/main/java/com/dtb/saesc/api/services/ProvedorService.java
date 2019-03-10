@@ -18,7 +18,7 @@ public interface ProvedorService {
 	 * 
 	 */
 
-	public Provedor adicionar(Provedor provedor);
+	public Optional<Provedor> adicionar(Provedor provedor);
 
 	/**
 	 * Atualiza uma entidade provedor no banco de dados. Caso o cnpj da entidade
@@ -34,7 +34,7 @@ public interface ProvedorService {
 	 * 
 	 */
 
-	public Provedor atualizar(Provedor provedor, String cnpj);
+	public Optional<Provedor> atualizar(Provedor provedor, String cnpj);
 
 	/**
 	 * Busca uma entidade Provedor pelo Id
