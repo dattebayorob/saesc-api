@@ -78,10 +78,10 @@ public class ProvedorServiceTest {
 		assertNotNull(service.atualizar(provedor, "00000000000000"));
 	}
 
-	@Test(expected = ValidationErrorsException.class)
+	@Test
 	public void testAtualizarComCnpjJaEmUso() {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
-		service.atualizar(provedor, "someOldCnpj");
+		assertFalse(service.atualizar(provedor, "someOldCnpj").isPresent());
 	}
 
 	@Test
