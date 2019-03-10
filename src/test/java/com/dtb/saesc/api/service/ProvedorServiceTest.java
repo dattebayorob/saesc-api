@@ -61,15 +61,15 @@ public class ProvedorServiceTest {
 		assertNotNull(service.adicionar(new Provedor()));
 	}
 	
-	@Test(expected = ValidationErrorsException.class)
+	@Test
 	public void testAdicionarComCnpjJaEmUso() {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
-		service.adicionar(provedor);
+		assertFalse(service.adicionar(provedor).isPresent());
 	}
 	
 	@Test
 	public void testAtualizar() {
-		assertNotNull(service.atualizar(provedor, "00000000000000").getId());
+		assertNotNull(service.atualizar(provedor, "00000000000000").get().getId());
 	}
 	
 	@Test
