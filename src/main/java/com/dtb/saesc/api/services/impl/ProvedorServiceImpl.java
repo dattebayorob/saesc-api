@@ -1,14 +1,11 @@
 package com.dtb.saesc.api.services.impl;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.ObjectError;
 
 import com.dtb.saesc.api.model.entities.Provedor;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 import com.dtb.saesc.api.model.repositories.ProvedorRepository;
 import com.dtb.saesc.api.services.ProvedorService;
 
@@ -28,17 +25,17 @@ public class ProvedorServiceImpl implements ProvedorService {
 	}
 
 	@Override
-	public Provedor adicionar(Provedor provedor) {
-		if (this.existePeloCnpj(provedor.getCnpj()))
-			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor", "Cnpj já cadastrado")));
-		return repository.save(provedor);
+	public Optional<Provedor> adicionar(Provedor provedor) {
+		return this.existePeloCnpj(provedor.getCnpj()) ? Optional.ofNullable(null)
+				: Optional.of(repository.save(provedor));
+		// throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor",
+		// "Cnpj já cadastrado")));
 	}
 
 	@Override
-	public Provedor atualizar(Provedor provedor, String cnpj) {
-		if (!provedor.getCnpj().equals(cnpj) && this.existePeloCnpj(provedor.getCnpj()))
-			throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor", "Cnpj já cadastrado")));
-		return repository.save(provedor);
+	public Optional<Provedor> atualizar(Provedor provedor, String cnpj) {
+		return !provedor.getCnpj().equals(cnpj) && this.existePeloCnpj(provedor.getCnpj()) ? Optional.ofNullable(null)
+				: Optional.of(repository.save(provedor));
 	}
 
 	@Override
