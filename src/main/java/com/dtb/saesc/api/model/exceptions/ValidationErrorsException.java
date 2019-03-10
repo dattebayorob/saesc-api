@@ -1,23 +1,29 @@
 package com.dtb.saesc.api.model.exceptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.validation.ObjectError;
 
-public class ValidationErrorsException extends RuntimeException{
+public class ValidationErrorsException extends RuntimeException {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4683899879176622500L;
-	private final List<ObjectError> errors;	
+	private static final long serialVersionUID = 5085636500278911220L;
+	private final List<ObjectError> errors = new ArrayList<>();
+
+	public ValidationErrorsException(ObjectError error) {
+		super();
+		errors.add(error);
+	}
 	public ValidationErrorsException(List<ObjectError> errors) {
 		super();
-		this.errors = errors;
+		errors.forEach(error -> this.errors.add(error));
 	}
+
 	public List<ObjectError> getErrors() {
 		return errors;
 	}
-	
-	
+
 }
