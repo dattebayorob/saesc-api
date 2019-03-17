@@ -1,7 +1,9 @@
 package com.dtb.saesc.api.service;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -33,7 +35,6 @@ public class LinkServiceTest {
 	
 	@Before
 	public void init() {
-		//when(repository.findAllByIp(Mockito.anyString())).thenReturn
 		BDDMockito.given(repository.findAllByIp(Mockito.anyString())).willReturn
 			(Arrays.asList(new Link(),new Link()));
 		BDDMockito.given(repository.findByEscolaId(Mockito.anyLong())).willReturn
@@ -42,11 +43,17 @@ public class LinkServiceTest {
 	
 	@Test
 	public void testBuscarLinks() {
-		assertFalse(service.buscarLinks(IP).isEmpty());
+		assertTrue(service.buscarLinks(IP).isPresent());
 	}
 	
 	@Test
 	public void testBuscarPorescola() {
-		assertFalse(service.buscarPorescola(Long.valueOf(1)).isEmpty());
+		assertTrue(service.buscarPorescola(Long.valueOf(1)).isPresent());
+	}
+	
+	@Test
+	public void testBuscarPorEscolaRetornandoNulo() {
+		BDDMockito.given(repository.findByEscolaId(Mockito.anyLong())).willReturn(new ArrayList<>());
+		assertFalse(service.buscarPorescola(Long.valueOf(1)).isPresent());
 	}
 }
