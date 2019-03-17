@@ -3,7 +3,6 @@ package com.dtb.saesc.api.services;
 import java.util.Optional;
 
 import com.dtb.saesc.api.model.entities.Provedor;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 
 import io.vavr.control.Either;
 
