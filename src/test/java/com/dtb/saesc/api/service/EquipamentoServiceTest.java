@@ -1,9 +1,8 @@
 package com.dtb.saesc.api.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -51,15 +50,9 @@ public class EquipamentoServiceTest {
 		BDDMockito.doNothing().when(historicoService).adicionar(Mockito.any(), Mockito.any(), Mockito.any());
 		BDDMockito.given(repository.existsById(Mockito.anyLong())).willReturn(true);
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(equipamento));
-		BDDMockito.given(repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(
-				Mockito.any(),Mockito.any())).willReturn(new PageImpl<>(
-						new ArrayList<Equipamento>() {
-							{
-								add(equipamento);
-								add(equipamento);
-							};
-						}
-						));
+		BDDMockito.given(repository
+				.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(Mockito.any(),Mockito.any()))
+		.willReturn(new PageImpl<>(Arrays.asList(equipamento,equipamento,equipamento)));
 	}
 	
 	@Test
@@ -69,12 +62,12 @@ public class EquipamentoServiceTest {
 	
 	@Test
 	public void testBuscarPaginaPorFiltros() {
-		assertTrue(service.buscarPaginaPorFiltros(new EquipamentoFilter(), PageRequest.of(0, 10)).hasContent());
+		assertTrue(service.buscarPaginaPorFiltros(new EquipamentoFilter(), PageRequest.of(0, 10)).isPresent());
 	}
 	
 	@Test
 	public void testPersistir() {
-		assertNotNull(service.persistir(equipamento, "Some shit", new Funcionario()));
+		assertTrue(service.persistir(equipamento, "Some shit", new Funcionario()).isRight());
 	}
 
 	@Test

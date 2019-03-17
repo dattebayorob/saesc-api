@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 
+import io.vavr.control.Either;
+
 public interface EscolaService {
 
 	/**
@@ -57,7 +59,7 @@ public interface EscolaService {
 	 * 
 	 */
 
-	public Optional<Escola> adicionar(Escola escola);
+	public Either<RuntimeException, Escola> adicionar(Escola escola);
 
 	/**
 	 * 
@@ -73,7 +75,7 @@ public interface EscolaService {
 	 * 
 	 **/
 
-	public Optional<Escola> atualizar(Escola escola, String inep);
+	public Either<RuntimeException, Escola> atualizar(Escola escola, String inep);
 	
 	/**
 	 * 
@@ -88,5 +90,5 @@ public interface EscolaService {
 	 * 
 	 * */
 	
-	public Page<Escola> pesquisarEscolas(EscolaFilter filtros, Pageable page);
+	public Optional<Page<Escola>> pesquisarEscolas(EscolaFilter filtros, Pageable page);
 }

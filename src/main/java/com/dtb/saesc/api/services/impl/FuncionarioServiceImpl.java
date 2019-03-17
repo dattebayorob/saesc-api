@@ -9,8 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Funcionario;
+import com.dtb.saesc.api.model.exceptions.ValidationErrorException;
+import com.dtb.saesc.api.model.exceptions.messages.UserMessages;
 import com.dtb.saesc.api.model.repositories.FuncionarioRepository;
 import com.dtb.saesc.api.services.FuncionarioService;
+
+import io.vavr.control.Either;
 
 @Service
 public class FuncionarioServiceImpl implements FuncionarioService {
@@ -18,15 +22,17 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	private FuncionarioRepository funcionarioRepository;
 
 	@Override
-	public Funcionario persistir(Funcionario funcionario) {
-		return funcionarioRepository.save(funcionario);
+	public Either<RuntimeException,Funcionario> adicionar(Funcionario funcionario) {
+		if(buscarPeloEmail(funcionario.getEmail()).isPresent())
+			return Either.left(new ValidationErrorException(UserMessages.EMAIL_JA_CADASTRADO));
+		return Either.right(funcionarioRepository.save(funcionario));
 	}
 
 	@Override
 	public Optional<Funcionario> buscarPeloEmail(String email) {
 		return funcionarioRepository.findByEmail(email);
 	}
-
+	
 	@Override
 	public Funcionario buscarPeloContexto() {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

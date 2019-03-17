@@ -1,6 +1,7 @@
 package com.dtb.saesc.api.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class FuncionarioServiceTest {
 	
 	@Test
 	public void testPersistir() {
-		assertNotNull(service.persistir(new Funcionario()).getId());
+		assertTrue(service.adicionar(new Funcionario()).isRight());
 	}
 	@Test
 	public void testBuscarPeloEmail() {

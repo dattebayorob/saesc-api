@@ -14,6 +14,8 @@ import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 import com.dtb.saesc.api.services.EquipamentoHistoricoService;
 import com.dtb.saesc.api.services.EquipamentoService;
 
+import io.vavr.control.Either;
+
 @Service
 public class EquipamentoServiceImpl implements EquipamentoService {
 	@Autowired
@@ -27,10 +29,10 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	}
 
 	@Override
-	public Equipamento persistir(Equipamento equipamento, String comentario, Funcionario funcionario) {
+	public Either<RuntimeException, Equipamento> persistir(Equipamento equipamento, String comentario, Funcionario funcionario) {
 		equipamento = repository.save(equipamento);
 		historicoService.adicionar(equipamento, funcionario, comentario);
-		return equipamento;
+		return Either.right(equipamento);
 	}
 
 	@Override
@@ -39,8 +41,10 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	}
 
 	@Override
-	public Page<Equipamento> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable) {
-		return repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable);
+	public Optional<Page<Equipamento>> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable) {
+		return Optional
+				.of(repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable))
+				.filter(p -> p.hasContent());
 	}
 
 }

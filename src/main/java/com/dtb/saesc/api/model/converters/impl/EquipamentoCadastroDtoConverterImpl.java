@@ -4,36 +4,42 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dtb.saesc.api.model.converters.EntityDtoConverter;
+import com.dtb.saesc.api.model.converters.Convert;
+import com.dtb.saesc.api.model.converters.Converter;
 import com.dtb.saesc.api.model.dtos.EquipamentoCadastroDto;
 import com.dtb.saesc.api.model.entities.Equipamento;
 
 @Component
-public class EquipamentoCadastroDtoConverterImpl implements EntityDtoConverter<EquipamentoCadastroDto, Equipamento>{
+public class EquipamentoCadastroDtoConverterImpl implements Converter<Equipamento, EquipamentoCadastroDto>{
 	@Autowired
-	private ModelMapper converter;
+	private ModelMapper map;
+	
 	@Override
-	public EquipamentoCadastroDto toDto(Equipamento entity, EquipamentoCadastroDto dto) {
-		converter.map(entity, dto);
-		return dto;
+	public Convert<Equipamento, EquipamentoCadastroDto> toDto(Class<EquipamentoCadastroDto> cls) {
+		return entity -> map.map(entity, cls);
 	}
 
 	@Override
-	public EquipamentoCadastroDto toDto(Equipamento entity, Class<EquipamentoCadastroDto> cls) {
-		return converter.map(entity, cls);
+	public Convert<Equipamento, EquipamentoCadastroDto> toDto(EquipamentoCadastroDto dto) {
+		return entity -> {
+			map.map(entity, dto);
+			return dto;
+		};
 	}
 
 	@Override
-	public Equipamento toEntity(EquipamentoCadastroDto dto, Equipamento equipamento) {
-		dto.setId(equipamento.getId());
-		Equipamento e = converter.map(dto, Equipamento.class);
-		e.setDataCriacao(equipamento.getDataCriacao());
-		return e;
+	public Convert<EquipamentoCadastroDto, Equipamento> toEntity(Class<Equipamento> cls) {
+		return dto -> map.map(dto, cls);
 	}
 
 	@Override
-	public Equipamento toEntity(EquipamentoCadastroDto dto, Class<Equipamento> cls) {
-		return converter.map(dto, cls);
+	public Convert<EquipamentoCadastroDto, Equipamento> toEntity(Equipamento entity) {
+		return dto -> {
+			dto.setId(entity.getId());
+			Equipamento e = map.map(dto, Equipamento.class);
+			e.setDataCriacao(entity.getDataCriacao());
+			return e;
+		};
 	}
 	
 }

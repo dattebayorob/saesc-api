@@ -1,15 +1,10 @@
 package com.dtb.saesc.api.controller;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,14 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dtb.saesc.api.model.converters.EntityDtoConverter;
+import com.dtb.saesc.api.model.converters.Converter;
 import com.dtb.saesc.api.model.dtos.EscolaDto;
 import com.dtb.saesc.api.model.dtos.EscolaResumidoDto;
 import com.dtb.saesc.api.model.entities.Escola;
 import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
+import com.dtb.saesc.api.model.exceptions.messages.EscolaMessages;
 import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
 import com.dtb.saesc.api.model.response.Response;
+import com.dtb.saesc.api.model.response.impl.ResponseData;
+import com.dtb.saesc.api.model.response.impl.ResponseError;
 import com.dtb.saesc.api.services.EscolaService;
 
 @RestController
@@ -36,14 +33,11 @@ import com.dtb.saesc.api.services.EscolaService;
 @CrossOrigin(value = "*")
 public class EscolaController {
 	@Autowired
-	private EscolaService escolaService;
+	private EscolaService service;
 	@Autowired
-	private EntityDtoConverter<EscolaDto, Escola> converter;
+	private Converter<Escola, EscolaDto> converter;
 	@Autowired
-	private EntityDtoConverter<EscolaResumidoDto, Escola> converterResumido;
-
-	private static final String ESCOLA_NAO_ENCONTRADA = "Escola não encontrada para o Id informado.";
-	private static final String INEP_JA_CADASTRADO = "Inep já cadastrado";
+	private Converter<Escola, EscolaResumidoDto> converterResumido;
 
 	/**
 	 * Retorna todas as escolas paginadas de acordo com o criterio de pesquisa
@@ -53,34 +47,21 @@ public class EscolaController {
 	 * 
 	 * @return ResponseEntity<Response>
 	 *
+	 * @throws ResourceNotFoundException
 	 * 
 	 */
 
 	@GetMapping
 	public ResponseEntity<Response> pesquisarEscolas(EscolaFilter filtros, Pageable page) {
-		Page<Escola> escolas = escolaService.pesquisarEscolas(filtros, page);
-		return responseEntityParaEscolaPaginado(escolas);
+		
+		Page<Escola> escolas = service.pesquisarEscolas(filtros, page)
+				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.PESQUISA_SEM_RESULTADOS));
+		return ResponseEntity.ok(
+				ResponseData.data(
+						converterResumido.toDto(EscolaResumidoDto.class).convert(escolas)
+						)
+				);
 
-	}
-
-	/**
-	 * 
-	 * Retorna uma entidade rest 200 ou 204
-	 * 
-	 * @param Page<Escola> escolas
-	 * @return ResponseEntity
-	 * 
-	 * @throws ResourceNotFoundException
-	 * 
-	 */
-
-	private ResponseEntity<Response> responseEntityParaEscolaPaginado(Page<Escola> escolas) {
-		if (!escolas.hasContent()) {
-			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
-		}
-		Page<EscolaResumidoDto> escolasDto = escolas
-				.map(escola -> converterResumido.toDto(escola, EscolaResumidoDto.class));
-		return ResponseEntity.ok(Response.data(escolasDto));
 	}
 
 	/**
@@ -92,14 +73,17 @@ public class EscolaController {
 	 * @throws ResourceNotFoundException
 	 * 
 	 */
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
-		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
-		if (!escolaPeloId.isPresent()) {
-			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
-		}
-		EscolaDto escolaDto = converter.toDto(escolaPeloId.get(), EscolaDto.class);
-		return ResponseEntity.ok(Response.data(escolaDto));
+		
+		Escola escola = service.buscarPeloId(id)
+				.orElseThrow(()-> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
+		return ResponseEntity.ok(
+				ResponseData.data(
+						converter.toDto(EscolaDto.class).convert(escola)
+						)
+				);
 
 	}
 
@@ -107,20 +91,26 @@ public class EscolaController {
 	 * 
 	 * Adiciona uma escola
 	 * 
-	 * @param EscolaDto
-	 * @param result
+	 * @param dto
 	 * 
 	 * @return ResponseEntity<Response>
+	 * 
 	 * @throws MethodArgumentNotValidException
+	 * @throws ResourceNotFoundException
 	 * 
 	 */
+	
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Validated @RequestBody EscolaDto dto) {
-		Escola escola = converter.toEntity(dto, Escola.class);
-		Optional<Escola> e = escolaService.adicionar(escola);
-		dto = converter.toDto(
-				e.orElseThrow(() -> new ValidationErrorsException(new ObjectError("Escola", INEP_JA_CADASTRADO))), dto);
-		return new ResponseEntity<>(Response.data(dto), HttpStatus.CREATED);
+		
+		Escola escola = converter.toEntity(Escola.class).convert(dto);
+		
+		return new ResponseEntity<>(
+				ResponseData.data(
+						service.adicionar(escola).fold(ResponseError::exception,
+								e ->converter.toDto(EscolaDto.class).convert(e))
+						),HttpStatus.CREATED
+				);
 
 	}
 
@@ -128,28 +118,33 @@ public class EscolaController {
 	 * 
 	 * Atualiza uma escola
 	 * 
-	 * @param     id;
+	 * @param id;
 	 * @param dto
-	 * @throws MethodArgumentNotValidException
 	 * 
+	 * @return ResponseEntity<Response>
+	 * 
+	 * @throws MethodArgumentNotValidException
 	 * @throws ResourceNotFoundException
 	 * 
 	 */
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Valid @RequestBody EscolaDto dto)
-			throws MethodArgumentNotValidException {
-		Optional<Escola> escolaPeloId = escolaService.buscarPeloId(id);
-		if (!escolaPeloId.isPresent()) {
-			throw new ResourceNotFoundException(ESCOLA_NAO_ENCONTRADA);
-		}
-		String inep = escolaPeloId.get().getInep();
-		Optional<Escola> escola = escolaService.atualizar(converter.toEntity(dto, escolaPeloId.get()), inep);
-		dto = converter.toDto(
-				escola.orElseThrow(() -> new ValidationErrorsException(new ObjectError("Escola", INEP_JA_CADASTRADO))),
-				dto);
-
-		return ResponseEntity.ok(Response.data(dto));
+	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Validated @RequestBody EscolaDto dto){
+		
+		Escola escola = service.buscarPeloId(id)
+				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
+		String inep = escola.getInep();
+		dto.setId(id);
+		return ResponseEntity.ok(
+				ResponseData.data(
+						service.atualizar(
+								converter
+								.toEntity(escola)
+								.convert(dto), inep)
+						.fold(ResponseError::exception,
+								e -> converter.toDto(EscolaDto.class).convert(e))
+						)
+				);
 	}
 
 }
