@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Provedor;
+import com.dtb.saesc.api.model.exceptions.ValidationErrorException;
+import com.dtb.saesc.api.model.exceptions.messages.ProvedorMessages;
 import com.dtb.saesc.api.model.repositories.ProvedorRepository;
 import com.dtb.saesc.api.services.ProvedorService;
+
+import io.vavr.control.Either;
 
 @Service
 public class ProvedorServiceImpl implements ProvedorService {
@@ -25,17 +29,23 @@ public class ProvedorServiceImpl implements ProvedorService {
 	}
 
 	@Override
-	public Optional<Provedor> adicionar(Provedor provedor) {
-		return this.existePeloCnpj(provedor.getCnpj()) ? Optional.ofNullable(null)
-				: Optional.of(repository.save(provedor));
-		// throw new ValidationErrorsException(Arrays.asList(new ObjectError("Provedor",
-		// "Cnpj já cadastrado")));
+	public Either<RuntimeException, Provedor> adicionar(Provedor provedor) {
+
+		if (existePeloCnpj(provedor.getCnpj()))
+			return Either.left(
+					new ValidationErrorException(ProvedorMessages.CNPJ_JA_CADASTRADO));
+
+		return Either.right(repository.save(provedor));
 	}
 
 	@Override
-	public Optional<Provedor> atualizar(Provedor provedor, String cnpj) {
-		return !provedor.getCnpj().equals(cnpj) && this.existePeloCnpj(provedor.getCnpj()) ? Optional.ofNullable(null)
-				: Optional.of(repository.save(provedor));
+	public Either<RuntimeException, Provedor> atualizar(Provedor provedor, String cnpj) {
+		
+		if (!provedor.getCnpj().equals(cnpj) && existePeloCnpj(provedor.getCnpj()))
+			return Either.left(
+					new ValidationErrorException(ProvedorMessages.CNPJ_JA_CADASTRADO));
+		
+		return Either.right(repository.save(provedor));
 	}
 
 	@Override

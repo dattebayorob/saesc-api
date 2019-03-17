@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dtb.saesc.api.model.entities.Provedor;
-import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 import com.dtb.saesc.api.model.repositories.ProvedorRepository;
 import com.dtb.saesc.api.services.ProvedorService;
 
@@ -58,18 +57,18 @@ public class ProvedorServiceTest {
 
 	@Test
 	public void testAdicionar() {
-		assertNotNull(service.adicionar(new Provedor()));
+		assertTrue(service.adicionar(new Provedor()).isRight());
 	}
 	
 	@Test
 	public void testAdicionarComCnpjJaEmUso() {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
-		assertFalse(service.adicionar(provedor).isPresent());
+		assertFalse(service.adicionar(provedor).isRight());
 	}
 	
 	@Test
 	public void testAtualizar() {
-		assertNotNull(service.atualizar(provedor, "00000000000000").get().getId());
+		assertNotNull(service.atualizar(provedor, "00000000000000").getOrElse(provedor).getId());
 	}
 	
 	@Test
@@ -81,7 +80,7 @@ public class ProvedorServiceTest {
 	@Test
 	public void testAtualizarComCnpjJaEmUso() {
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(true);
-		assertFalse(service.atualizar(provedor, "someOldCnpj").isPresent());
+		assertTrue(service.atualizar(provedor, "somenovocnpj").isLeft());
 	}
 
 	@Test

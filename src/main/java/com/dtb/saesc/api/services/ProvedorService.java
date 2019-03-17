@@ -5,6 +5,8 @@ import java.util.Optional;
 import com.dtb.saesc.api.model.entities.Provedor;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorsException;
 
+import io.vavr.control.Either;
+
 public interface ProvedorService {
 
 	/**
@@ -18,7 +20,7 @@ public interface ProvedorService {
 	 * 
 	 */
 
-	public Optional<Provedor> adicionar(Provedor provedor);
+	public Either<RuntimeException, Provedor> adicionar(Provedor provedor);
 
 	/**
 	 * Atualiza uma entidade provedor no banco de dados. Caso o cnpj da entidade
@@ -34,7 +36,7 @@ public interface ProvedorService {
 	 * 
 	 */
 
-	public Optional<Provedor> atualizar(Provedor provedor, String cnpj);
+	public Either<RuntimeException,Provedor> atualizar(Provedor provedor, String cnpj);
 
 	/**
 	 * Busca uma entidade Provedor pelo Id
