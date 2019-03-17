@@ -1,6 +1,7 @@
 package com.dtb.saesc.api.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +11,19 @@ import com.dtb.saesc.api.model.repositories.LinkRepository;
 import com.dtb.saesc.api.services.LinkService;
 
 @Service
-public class LinkServiceImpl implements LinkService{
+public class LinkServiceImpl implements LinkService {
 
 	@Autowired
 	private LinkRepository repository;
-	
+
 	@Override
-	public List<Link> buscarPorescola(Long id) {
-		return repository.findByEscolaId(id);
+	public Optional<List<Link>> buscarPorescola(Long id) {
+		return Optional.of(repository.findByEscolaId(id)).filter(l -> !l.isEmpty());
 	}
 
 	@Override
-	public List<Link> buscarLinks(String ip) {
-		return repository.findAllByIp(ip);
+	public Optional<List<Link>> buscarLinks(String ip) {
+		return Optional.of(repository.findAllByIp(ip)).filter(l -> !l.isEmpty());
 	}
-	
+
 }
