@@ -29,7 +29,6 @@ public class WebRestControllerAdvice {
 	@ExceptionHandler(ValidationErrorException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public Response handleValidationErrorsException(ValidationErrorException ex) {
-		System.out.println(ex.getMessage());
 		return ResponseError.error().add(ex.getMessage()).build();
 	}
 }
