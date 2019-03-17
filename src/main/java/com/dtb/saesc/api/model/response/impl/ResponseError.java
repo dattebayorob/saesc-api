@@ -42,4 +42,14 @@ public class ResponseError implements Response{
 	public static ResponseError exception(RuntimeException ex) {
 		throw ex;
 	}
+
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<String> errors) {
+		this.errors = errors;
+	}
+	
+	
 }
