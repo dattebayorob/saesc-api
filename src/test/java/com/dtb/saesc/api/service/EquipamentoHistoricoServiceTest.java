@@ -11,9 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.dtb.saesc.api.model.entities.Equipamento;
 import com.dtb.saesc.api.model.entities.EquipamentoHistorico;
-import com.dtb.saesc.api.model.entities.Funcionario;
 import com.dtb.saesc.api.model.repositories.EquipamentoHistoricoRepository;
 import com.dtb.saesc.api.services.EquipamentoHistoricoService;
 
@@ -28,7 +26,7 @@ public class EquipamentoHistoricoServiceTest {
 	
 	@Before
 	public void init() {
-		BDDMockito.given(repository.save(Mockito.any())).willReturn(new EquipamentoHistorico());
+		BDDMockito.given(repository.save(Mockito.any())).willReturn(EquipamentoHistorico.builder().build());
 	}
 	
 	@Test

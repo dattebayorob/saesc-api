@@ -6,6 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name = "equipamento_status")
 public class EquipamentoStatus implements GenericEntity {
@@ -13,12 +23,7 @@ public class EquipamentoStatus implements GenericEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	public EquipamentoStatus() {
-		// TODO Auto-generated constructor stub
-	}
-	public EquipamentoStatus(Long id) {
-		this.id = id;
-	}
+
 	@Override
 	public Long getId() {
 		return id;

@@ -20,8 +20,10 @@ public class EquipamentoStatusRepositoryTest {
 	
 	@Test
 	public void testSave() {
-		EquipamentoStatus status = new EquipamentoStatus();
-		status.setNome("Fake Status");
+		EquipamentoStatus status = EquipamentoStatus
+				.builder()
+					.nome("Fake Status")
+				.build();
 		assertNotNull(repository.save(status));
 	}
 }

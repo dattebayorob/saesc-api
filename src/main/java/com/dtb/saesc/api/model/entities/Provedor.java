@@ -11,6 +11,16 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name="link_provedor")
 public class Provedor implements GenericEntity{
@@ -23,12 +33,6 @@ public class Provedor implements GenericEntity{
 	private Date dataCriacao;
 	@Column(name="data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
-	public Provedor() {
-		// TODO Auto-generated constructor stub
-	}
-	public Provedor(Long id) {
-		this.id = id;
-	}
 	
 	@Override
 	public Long getId() {

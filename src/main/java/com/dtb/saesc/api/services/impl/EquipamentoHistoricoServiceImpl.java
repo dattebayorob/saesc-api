@@ -18,8 +18,12 @@ public class EquipamentoHistoricoServiceImpl implements EquipamentoHistoricoServ
 	public void adicionar(Equipamento equipamento, Funcionario funcionario, String comentario) {
 		comentario = "Status: "+equipamento.getStatus().getNome()+
 				(comentario==null?"":" - "+comentario);
-		EquipamentoHistorico historico = new EquipamentoHistorico(equipamento, funcionario,comentario);
-		repository.save(historico);
+		repository.save(EquipamentoHistorico
+						.builder()
+							.equipamento(equipamento)
+							.funcionario(funcionario)
+							.comentario(comentario)
+						.build());
 	}
 	
 }

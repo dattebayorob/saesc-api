@@ -22,8 +22,10 @@ public class EquipamentoMarcaRepositoryTest {
 	
 	@Before
 	public void init() {
-		marca = new EquipamentoMarca();
-		marca.setNome("Fake Marca "+(int) (Math.random()*1000)); //Prevent duplicate unique key 
+		marca = EquipamentoMarca
+				.builder()
+					.nome("Fake Marca "+(int) (Math.random()*1000))
+				.build();
 		repository.save(marca);
 	}
 	

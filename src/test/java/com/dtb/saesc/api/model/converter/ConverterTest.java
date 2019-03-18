@@ -28,11 +28,13 @@ public class ConverterTest {
 	
 	@Before
 	public void init() {
-		entity = new Provedor();
-		entity.setCnpj("Some CNPJ");
-		entity.setId(Long.valueOf(1));
-		entity.setNome("Some Provedor");
-		entity.setDataCriacao(new Date());
+		entity = Provedor
+				.builder()
+					.cnpj("Some CNPJ")
+					.id(Long.valueOf(1))
+					.nome("Some Provedor")
+					.dataCriacao(new Date())
+				.build();
 		
 		dto = new ProvedorDto();
 		dto.setCnpj("Some CNPJ");
@@ -58,7 +60,6 @@ public class ConverterTest {
 	@Test
 	public void testConvertToEntityWithClass() {
 		Provedor entity = converter.toEntity(Provedor.class).convert(dto);
-		System.out.println(entity.getId());
 		assertNotNull(entity);
 		assertEquals(entity.getNome(), dto.getNome());
 		assertNotEquals(entity.getDataCriacao(), this.entity.getDataCriacao());		

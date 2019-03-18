@@ -13,6 +13,16 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name = "equipamento_historico")
 public class EquipamentoHistorico implements GenericEntity {
@@ -27,14 +37,6 @@ public class EquipamentoHistorico implements GenericEntity {
 	private Funcionario funcionario;
 	private String comentario;
 	private Date data;
-	public EquipamentoHistorico() {
-		// TODO Auto-generated constructor stub
-	}
-	public EquipamentoHistorico(Equipamento equipamento, Funcionario funcionario, String comentario) {
-		this.equipamento = equipamento;
-		this.funcionario = funcionario;
-		this.comentario = comentario;
-	}
 
 	@Override
 	public Long getId() {

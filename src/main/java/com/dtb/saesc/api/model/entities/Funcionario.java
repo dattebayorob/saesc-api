@@ -19,6 +19,16 @@ import javax.persistence.Table;
 
 import com.dtb.saesc.api.model.enums.PerfilEnum;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name="funcionario")
 public class Funcionario  implements GenericEntity,Serializable{
@@ -47,12 +57,7 @@ public class Funcionario  implements GenericEntity,Serializable{
 	private Date dataCriacao;
 	@Column(name="data_atualizacao",nullable = false)
 	private Date dataAtualizacao;
-	public Funcionario() {
-		// TODO Auto-generated constructor stub
-	}
-	public Funcionario(Long id) {
-		this.id = id;
-	}
+
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = new Date();
@@ -118,12 +123,6 @@ public class Funcionario  implements GenericEntity,Serializable{
 	}
 	public void setDataAtualizacao(Date dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
-	}
-	@Override
-	public String toString() {
-		return "Funcionario [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", senha=" + senha
-				+ ", perfil=" + perfil + ", escola=" + escola + ", dataCriacao=" + dataCriacao + ", dataAtualizacao="
-				+ dataAtualizacao + "]";
 	}
 	
 }

@@ -33,10 +33,16 @@ public class EquipamentoModeloRepositoryTest {
 	@Before
 	public void init() {
 		log.info("Instanciação e Persistencia inicial pros testes");
-		modelo = new EquipamentoModelo();
-		modelo.setNome("Modelo Fake");
-		modelo.setMarca(new EquipamentoMarca(Long.valueOf(1)));
-		modelo.setTipo(EquipamentoTipoEnum.COMPUTADOR);
+		
+		modelo = EquipamentoModelo
+				.builder()
+					.nome("Modelo Fake")
+					.marca(EquipamentoMarca
+						.builder()
+							.id(Long.valueOf(1))
+						.build())
+					.tipo(EquipamentoTipoEnum.COMPUTADOR)
+				.build();
 		modelo = repository.save(modelo);
 	}
 	@After

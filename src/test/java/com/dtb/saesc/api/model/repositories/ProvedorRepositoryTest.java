@@ -33,9 +33,11 @@ public class ProvedorRepositoryTest {
 	@Before
 	public void init() {
 		log.info("Instanciando entidade inicial pros testes");
-		provedor = new Provedor();
-		provedor.setCnpj("00000000000001");
-		provedor.setNome("Provedor de Testes 1");
+		provedor = Provedor
+				.builder()
+					.cnpj("00000000000001")
+					.nome("Provedor de Testes 1")
+				.build();
 		repository.save(provedor);
 	}
 	
@@ -53,7 +55,6 @@ public class ProvedorRepositoryTest {
 	@Test
 	public void testFindAll() {
 		List<Provedor> provedores = repository.findAll();
-		provedores.forEach(p -> System.out.println(p.getCnpj()));
 		assertTrue(!provedores.isEmpty());
 	}
 	@Test

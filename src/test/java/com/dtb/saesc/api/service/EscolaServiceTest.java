@@ -45,8 +45,7 @@ public class EscolaServiceTest {
 	
 	@Before
 	public void init() {
-		escola = new Escola();
-		escola.setInep("0000000");
+		escola = Escola.builder().inep("0000000").build();
 		BDDMockito.given(repository.save(Mockito.any())).willReturn(escola);
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(escola));
 		BDDMockito.given(repository.findByInep(Mockito.anyString())).willReturn(Optional.of(escola));
