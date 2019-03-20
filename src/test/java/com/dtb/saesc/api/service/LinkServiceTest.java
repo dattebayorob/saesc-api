@@ -36,9 +36,9 @@ public class LinkServiceTest {
 	@Before
 	public void init() {
 		BDDMockito.given(repository.findAllByIp(Mockito.anyString())).willReturn
-			(Arrays.asList(new Link(),new Link()));
+			(Arrays.asList(Link.builder().build(),Link.builder().build()));
 		BDDMockito.given(repository.findByEscolaId(Mockito.anyLong())).willReturn
-			(Arrays.asList(new Link(),new Link()));
+			(Arrays.asList(Link.builder().build(),Link.builder().build()));
 	}
 	
 	@Test

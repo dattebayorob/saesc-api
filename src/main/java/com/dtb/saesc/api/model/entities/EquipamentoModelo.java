@@ -14,9 +14,19 @@ import javax.persistence.Table;
 
 import com.dtb.saesc.api.model.enums.EquipamentoTipoEnum;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name = "equipamento_modelo")
-public class EquipamentoModelo implements GenericEntity {
+public class EquipamentoModelo{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -28,18 +38,11 @@ public class EquipamentoModelo implements GenericEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private EquipamentoTipoEnum tipo;
-	public EquipamentoModelo() {
-		// TODO Auto-generated constructor stub
-	}
-	public EquipamentoModelo(Long id) {
-		this.id = id;
-	}
-	@Override
+
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

@@ -42,11 +42,16 @@ public class EquipamentoServiceTest {
 
 	@Before
 	public void init() {
-		equipamento = new Equipamento();
-		equipamento.setId(Long.valueOf(1));
-		equipamento.setStatus(new EquipamentoStatus(Long.valueOf(1)));
-		equipamento.getStatus().setNome("someShit");
-		BDDMockito.given(repository.save(Mockito.any())).willReturn(new Equipamento());
+		equipamento = Equipamento
+				.builder()
+					.id(Long.valueOf(1))
+					.status(EquipamentoStatus
+							.builder()
+								.id(Long.valueOf(1))
+								.nome("someshit")
+							.build())
+				.build();
+		BDDMockito.given(repository.save(Mockito.any())).willReturn(Equipamento.builder().build());
 		BDDMockito.doNothing().when(historicoService).adicionar(Mockito.any(), Mockito.any(), Mockito.any());
 		BDDMockito.given(repository.existsById(Mockito.anyLong())).willReturn(true);
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(equipamento));
@@ -67,7 +72,7 @@ public class EquipamentoServiceTest {
 	
 	@Test
 	public void testPersistir() {
-		assertTrue(service.persistir(equipamento, "Some shit", new Funcionario()).isRight());
+		assertTrue(service.persistir(equipamento, "Some shit", Funcionario.builder().build()).isRight());
 	}
 
 	@Test

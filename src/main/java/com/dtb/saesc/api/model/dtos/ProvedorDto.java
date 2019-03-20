@@ -4,9 +4,7 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
-import com.dtb.saesc.api.model.entities.GenericEntity;
-
-public class ProvedorDto implements GenericEntity {
+public class ProvedorDto{
 	private Long id;
 	@NotEmpty(message = "O CNPJ do provedor de internet deve ser informado.")
 	@CNPJ(message = "O CNPJ informado não é valido.")
@@ -14,12 +12,10 @@ public class ProvedorDto implements GenericEntity {
 	@NotEmpty(message = "Nome do provedor de internet deve ser informado.")
 	private String nome;
 
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

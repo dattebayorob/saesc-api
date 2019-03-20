@@ -9,9 +9,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name="escola_link")
-public class Link implements GenericEntity{
+public class Link{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -24,11 +34,9 @@ public class Link implements GenericEntity{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_escola")
 	private Escola escola;
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

@@ -34,7 +34,7 @@ public class FuncionarioServiceTest {
 	
 	@Before
 	public void init() {
-		Funcionario funcionario = new Funcionario(Long.valueOf(1));
+		Funcionario funcionario = Funcionario.builder().id(Long.valueOf(1)).build();
 		
 		BDDMockito.given(repository.save(Mockito.any())).willReturn(funcionario);
 		BDDMockito.given(repository.findByEmail(Mockito.anyString())).willReturn(Optional.ofNullable(funcionario));
@@ -42,7 +42,7 @@ public class FuncionarioServiceTest {
 	
 	@Test
 	public void testPersistir() {
-		assertTrue(service.adicionar(new Funcionario()).isRight());
+		assertTrue(service.adicionar(Funcionario.builder().build()).isRight());
 	}
 	@Test
 	public void testBuscarPeloEmail() {

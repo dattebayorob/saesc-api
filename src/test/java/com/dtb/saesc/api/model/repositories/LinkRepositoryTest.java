@@ -36,10 +36,13 @@ public class LinkRepositoryTest {
 	@Before
 	public void init() {
 		log.info("Instanciação e Persistencia inicial pros testes");
-		link = new Link();
-		link.setEscola(new Escola(Long.valueOf(1)));
-		link.setIp("172.xxx.xxx.xx1");
-		link.setProvedor(new Provedor(Long.valueOf(1)));
+		
+		link = Link
+				.builder()
+					.escola(Escola.builder().id(ID_ESCOLA).build())
+					.ip("172.xxx.xxx.xx1")
+					.provedor(Provedor.builder().id(Long.valueOf(1)).build())
+				.build();
 		repository.save(link);
 	}
 	@After()
@@ -69,8 +72,6 @@ public class LinkRepositoryTest {
 	@Test
 	public void testFindAllByIp() {
 		List<Link> links = repository.findAllByIp(IP);
-		if(!links.isEmpty())
-			links.forEach(l -> System.out.println(l.getIp()));
 		assertTrue(!links.isEmpty());
 	}
 	@Test

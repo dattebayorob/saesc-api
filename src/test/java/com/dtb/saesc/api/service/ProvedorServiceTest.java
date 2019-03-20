@@ -38,10 +38,12 @@ public class ProvedorServiceTest {
 
 	@Before
 	public void init() {
-		provedor = new Provedor();
-		provedor.setId(Long.valueOf(1));
-		provedor.setNome("Provedor fake");
-		provedor.setCnpj("00000000000000");
+		provedor = Provedor
+				.builder()
+					.id(Long.valueOf(1))
+					.nome("Provedor fake")
+					.cnpj("00000000000000")
+				.build();
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(provedor));
 		BDDMockito.given(repository.existsByCnpj(Mockito.anyString())).willReturn(false);
 		BDDMockito.given(repository.existsById(Mockito.anyLong())).willReturn(true);
@@ -57,7 +59,7 @@ public class ProvedorServiceTest {
 
 	@Test
 	public void testAdicionar() {
-		assertTrue(service.adicionar(new Provedor()).isRight());
+		assertTrue(service.adicionar(Provedor.builder().build()).isRight());
 	}
 	
 	@Test

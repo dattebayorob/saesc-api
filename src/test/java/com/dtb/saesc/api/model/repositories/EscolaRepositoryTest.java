@@ -45,11 +45,13 @@ public class EscolaRepositoryTest {
 		log.info("Instanciação e Persistencia inicial pros testes");
 		filter = new EscolaFilter();
 		page = PageRequest.of(0, 20, Direction.ASC, "id");
-		escola = new Escola();
-		escola.setCrede(CredeEnum.SEFOR_2);
-		escola.setPrefixo(PrefixoEnum.valueOf("EEFM"));
-		escola.setNome("FAKE ESCOLA");
-		escola.setInep("inep_"+(int)(Math.random()*1000));
+		escola = Escola
+					.builder()
+						.crede(CredeEnum.SEFOR_2)
+						.prefixo(PrefixoEnum.EEFM)
+						.nome("FAKE ESCOLA")
+						.inep("inep_"+(int)(Math.random()*1000))
+					.build();
 		repository.save(escola);
 	}
 	@After

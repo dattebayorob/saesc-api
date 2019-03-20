@@ -7,12 +7,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.dtb.saesc.api.model.entities.GenericEntity;
 import com.dtb.saesc.api.model.enums.CredeEnum;
 import com.dtb.saesc.api.model.enums.PrefixoEnum;
 import com.dtb.saesc.api.model.utils.validators.Enum;
 
-public class EscolaDto implements GenericEntity{
+public class EscolaDto{
 	private Long id;
 	@NotNull(message = "Prefixo deve ser informado.")
 	@Enum(enumClass = PrefixoEnum.class, message = "Prefixo invalido.")
@@ -29,11 +28,10 @@ public class EscolaDto implements GenericEntity{
 	private String rua;
 	private String bairro;
 	private String telefone;
-	@Override
+
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

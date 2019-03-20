@@ -46,11 +46,22 @@ public class EquipamentoRepositoryTest {
 		log.info("Instanciação e Persistencia inicial pros testes");
 		filter = new EquipamentoFilter();
 		page = PageRequest.of(0, 10, Direction.ASC, "id");
-		equipamento = new Equipamento();
-		equipamento.setEscola(new Escola(Long.valueOf(1)));
-		equipamento.setStatus(new EquipamentoStatus(Long.valueOf(1)));
-		equipamento.setModelo(new EquipamentoModelo(Long.valueOf(2)));
-		equipamento.setDescricao("Fake equipamento descricao com modelo 2");
+		equipamento = Equipamento
+				.builder()
+					.escola(Escola
+							.builder()
+								.id(Long.valueOf(1))
+							.build())
+					.status(EquipamentoStatus
+							.builder()
+								.id(Long.valueOf(1))
+							.build())
+					.modelo(EquipamentoModelo
+							.builder()
+								.id(Long.valueOf(2))
+							.build())
+					.descricao("Fake equipamento descricao com modelo 2")
+				.build();
 		repository.save(equipamento);
 	}
 

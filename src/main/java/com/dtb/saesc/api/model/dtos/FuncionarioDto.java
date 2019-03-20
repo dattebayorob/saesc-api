@@ -6,9 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.dtb.saesc.api.model.entities.GenericEntity;
-
-public class FuncionarioDto implements GenericEntity {
+public class FuncionarioDto{
 	private Long id;
 	@NotEmpty(message = "O nome do funcionario deve ser informado.")
 	private String nome;
@@ -25,12 +23,10 @@ public class FuncionarioDto implements GenericEntity {
 	@NotEmpty
 	private String escolaId;
 
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

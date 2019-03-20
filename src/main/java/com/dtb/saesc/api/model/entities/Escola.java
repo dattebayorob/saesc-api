@@ -20,9 +20,19 @@ import javax.persistence.Table;
 import com.dtb.saesc.api.model.enums.CredeEnum;
 import com.dtb.saesc.api.model.enums.PrefixoEnum;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name = "escola")
-public class Escola implements GenericEntity {
+public class Escola{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -45,20 +55,11 @@ public class Escola implements GenericEntity {
 	private List<Link> links;
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
-	
-	public Escola() {
-		// TODO Auto-generated constructor stub
-	}
-	public Escola(Long id) {
-		this.id = id;
-	}
-	
-	@Override
+		
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -161,13 +162,6 @@ public class Escola implements GenericEntity {
 		final Date dataAtual = new Date();
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
-	}
-
-	@Override
-	public String toString() {
-		return "Escola [id=" + id + ", prefixo=" + prefixo + ", nome=" + nome + ", inep=" + inep + ", crede=" + crede
-				+ ", rua=" + rua + ", bairro=" + bairro + ", telefone=" + telefone + ", dataCriacao=" + dataCriacao
-				+ ", dataAtualizacao=" + dataAtualizacao + ", links=" + links + ", funcionarios=" + funcionarios + "]";
 	}
 
 }

@@ -2,9 +2,7 @@ package com.dtb.saesc.api.model.dtos;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.dtb.saesc.api.model.entities.GenericEntity;
-
-public class LinkDto implements GenericEntity {
+public class LinkDto{
 
 	private Long id;
 	@NotEmpty(message = "Endereço ip do link deve ser informado.")
@@ -17,12 +15,10 @@ public class LinkDto implements GenericEntity {
 	private long escolaId;
 	private String escolaNome;
 
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

@@ -18,9 +18,19 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 @Entity
 @Table(name = "equipamento")
-public class Equipamento implements GenericEntity{
+public class Equipamento{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -45,13 +55,6 @@ public class Equipamento implements GenericEntity{
 	@Column(name = "data_atualizacao")
 	private Date dataAtualizacao;
 
-	public Equipamento() {
-		// TODO Auto-generated constructor stub
-	}
-	public Equipamento(Long id) {
-		this.id = id;
-	}
-
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = new Date();
@@ -63,11 +66,9 @@ public class Equipamento implements GenericEntity{
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
 	}
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

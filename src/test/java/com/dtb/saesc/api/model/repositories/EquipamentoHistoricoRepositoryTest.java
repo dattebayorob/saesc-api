@@ -29,8 +29,12 @@ public class EquipamentoHistoricoRepositoryTest {
 
 	@Before
 	public void init() {
-		historico = new EquipamentoHistorico(new Equipamento(Long.valueOf(1)), new Funcionario(Long.valueOf(1)),
-				"Comentario Fake");
+		historico = EquipamentoHistorico
+				.builder()
+					.equipamento(Equipamento.builder().id(Long.valueOf(1)).build())
+					.funcionario(Funcionario.builder().id(Long.valueOf(1)).build())
+					.comentario("comentario Fake")
+				.build();
 		repository.save(historico);
 	}
 	@Test
@@ -40,8 +44,14 @@ public class EquipamentoHistoricoRepositoryTest {
 	@Test
 	public void testSaveWithFullDate() {
 		Date dataAtual = new Date();
-		EquipamentoHistorico historicoNovo = repository.save(new EquipamentoHistorico(new Equipamento(Long.valueOf(1)),new Funcionario(Long.valueOf(1)),
-				"Comentario do dia "+dataAtual.toString()));
+		EquipamentoHistorico historicoNovo = repository
+				.save(EquipamentoHistorico
+						.builder()
+						.equipamento(Equipamento.builder().id(Long.valueOf(1)).build())
+						.funcionario(Funcionario.builder().id(Long.valueOf(1)).build())
+						.comentario("Comentario do dia "+dataAtual.toString())
+					.build()
+					);
 		assertEquals(dataAtual.toString(), historicoNovo.getData().toString());
 		assertNotNull(historicoNovo.getId());
 	}
