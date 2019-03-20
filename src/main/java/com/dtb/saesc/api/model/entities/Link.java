@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="escola_link")
-public class Link implements GenericEntity{
+public class Link{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -34,11 +34,9 @@ public class Link implements GenericEntity{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_escola")
 	private Escola escola;
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

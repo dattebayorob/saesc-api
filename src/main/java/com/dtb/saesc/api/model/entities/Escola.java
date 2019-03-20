@@ -32,7 +32,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "escola")
-public class Escola implements GenericEntity {
+public class Escola{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -56,12 +56,10 @@ public class Escola implements GenericEntity {
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
 		
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

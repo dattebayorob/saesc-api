@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "equipamento_modelo")
-public class EquipamentoModelo implements GenericEntity {
+public class EquipamentoModelo{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,12 +39,10 @@ public class EquipamentoModelo implements GenericEntity {
 	@Column(nullable = false)
 	private EquipamentoTipoEnum tipo;
 
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

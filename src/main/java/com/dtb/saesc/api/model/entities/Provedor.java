@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="link_provedor")
-public class Provedor implements GenericEntity{
+public class Provedor{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,11 +34,9 @@ public class Provedor implements GenericEntity{
 	@Column(name="data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
 	
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

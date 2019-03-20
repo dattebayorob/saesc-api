@@ -31,7 +31,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="funcionario")
-public class Funcionario  implements GenericEntity,Serializable{
+public class Funcionario implements Serializable{
 	/**
 	 * 
 	 */
@@ -68,11 +68,9 @@ public class Funcionario  implements GenericEntity,Serializable{
 		this.dataAtualizacao = dataAtual;
 		this.dataCriacao = dataAtual;
 	}
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

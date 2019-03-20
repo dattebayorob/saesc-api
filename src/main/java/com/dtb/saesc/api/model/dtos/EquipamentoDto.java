@@ -3,9 +3,7 @@ package com.dtb.saesc.api.model.dtos;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dtb.saesc.api.model.entities.GenericEntity;
-
-public class EquipamentoDto implements GenericEntity {
+public class EquipamentoDto{
 	private Long id;
 	private String descricao;
 	private Long modeloId;
@@ -18,12 +16,10 @@ public class EquipamentoDto implements GenericEntity {
 	private String statusNome;
 	private List<EquipamentoHistoricoDto> historico;
 
-	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

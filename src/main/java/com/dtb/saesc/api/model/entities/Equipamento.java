@@ -30,7 +30,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "equipamento")
-public class Equipamento implements GenericEntity{
+public class Equipamento{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -66,11 +66,9 @@ public class Equipamento implements GenericEntity{
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
 	}
-	@Override
 	public Long getId() {
 		return id;
 	}
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
