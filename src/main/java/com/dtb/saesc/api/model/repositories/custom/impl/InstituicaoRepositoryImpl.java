@@ -48,6 +48,10 @@ public class InstituicaoRepositoryImpl implements InstituicaoRepositoryQuery {
 			predicates
 					.add(criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
 		}
+		if(!StringUtils.isEmpty(filter.getIp())) {
+			predicates
+					.add(criteriaBuilder.like(root.join("links").get("ip"), "%" + filter.getIp() + "%"));
+		}
 		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
 		return p;
 	}
