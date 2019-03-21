@@ -2,9 +2,6 @@ package com.dtb.saesc.api.model.repositories;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,22 +58,5 @@ public class LinkRepositoryTest {
 	public void deleteById() {
 		repository.deleteById(link.getId());
 		assertFalse(repository.findById(link.getId()).isPresent());
-	}
-	
-	@Test
-	public void testFindByEscolaId() {
-		List<Link> links = repository.findByInstituicaoId(ID_ESCOLA);
-		assertTrue(!links.isEmpty());
-	}
-	
-	@Test
-	public void testFindAllByIp() {
-		List<Link> links = repository.findByIp(IP);
-		assertTrue(!links.isEmpty());
-	}
-	@Test
-	public void testFindAllByIpWithWrongIp() {
-		List<Link> links = repository.findByIp("Num_vai_ter_nada");
-		assertTrue(links.isEmpty());
 	}
 }
