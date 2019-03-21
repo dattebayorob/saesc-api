@@ -23,3 +23,7 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### Dont be a dumb again ###
+/src/main/resources/db/migration/V06__popular_tabela_escola.sql
+/src/main/resources/db/migration/V07__popular_tabela_escola_link.sql
