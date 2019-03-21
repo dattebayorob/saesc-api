@@ -1,17 +1,15 @@
 package com.dtb.saesc.api.model.repositories.custom.filter;
 
-public class EscolaFilter {
+public class InstituicaoFilter {
 	private String nome;
 	private String crede;
-	private String prefixo;
-	public EscolaFilter() {
+	public InstituicaoFilter() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public EscolaFilter(String nome, String crede, String prefixo) {
+	public InstituicaoFilter(String nome, String crede) {
 		this.nome = nome;
 		this.crede = crede;
-		this.prefixo = prefixo;
 	}
 
 	public String getNome() {
@@ -25,12 +23,6 @@ public class EscolaFilter {
 	}
 	public void setCrede(String crede) {
 		this.crede = crede;
-	}
-	public String getPrefixo() {
-		return prefixo;
-	}
-	public void setPrefixo(String prefixo) {
-		this.prefixo = prefixo;
 	}
 	
 }

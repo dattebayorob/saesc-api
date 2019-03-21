@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.dtb.saesc.api.model.entities.Equipamento;
 import com.dtb.saesc.api.model.entities.EquipamentoModelo;
 import com.dtb.saesc.api.model.entities.EquipamentoStatus;
-import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.repositories.custom.filter.EquipamentoFilter;
 
 @SpringBootTest
@@ -48,7 +48,7 @@ public class EquipamentoRepositoryTest {
 		page = PageRequest.of(0, 10, Direction.ASC, "id");
 		equipamento = Equipamento
 				.builder()
-					.escola(Escola
+					.instituicao(Instituicao
 							.builder()
 								.id(Long.valueOf(1))
 							.build())

@@ -21,37 +21,37 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorException;
-import com.dtb.saesc.api.model.repositories.EscolaRepository;
-import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
-import com.dtb.saesc.api.services.EscolaService;
+import com.dtb.saesc.api.model.repositories.InstituicaoRepository;
+import com.dtb.saesc.api.model.repositories.custom.filter.InstituicaoFilter;
+import com.dtb.saesc.api.services.InstituicaoService;
 
 import io.vavr.control.Either;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class EscolaServiceTest {
+public class instituicaoServiceTest {
 	@MockBean
-	private EscolaRepository repository;
+	private InstituicaoRepository repository;
 	
 	@Autowired
-	private EscolaService service;
+	private InstituicaoService service;
 	
 	@Rule
 	public final ExpectedException e = ExpectedException.none();
 		
-	private Escola escola;
+	private Instituicao instituicao;
 	
 	@Before
 	public void init() {
-		escola = Escola.builder().inep("0000000").build();
-		BDDMockito.given(repository.save(Mockito.any())).willReturn(escola);
-		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(escola));
-		BDDMockito.given(repository.findByInep(Mockito.anyString())).willReturn(Optional.of(escola));
+		instituicao = Instituicao.builder().inep("0000000").build();
+		BDDMockito.given(repository.save(Mockito.any())).willReturn(instituicao);
+		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(instituicao));
+		BDDMockito.given(repository.findByInep(Mockito.anyString())).willReturn(Optional.of(instituicao));
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(false);
 		BDDMockito.given(repository.findPageByNomeOrCredeOrPrefixo(Mockito.any(), Mockito.any())).
-			willReturn(new PageImpl<>(Arrays.asList(escola,escola)));
+			willReturn(new PageImpl<>(Arrays.asList(instituicao,instituicao)));
 	}
 	
 	@Test
@@ -66,7 +66,7 @@ public class EscolaServiceTest {
 	
 	@Test
 	public void testAdicionar() {
-		Either<RuntimeException, Escola> either = service.adicionar(escola);
+		Either<RuntimeException, Instituicao> either = service.adicionar(instituicao);
 		assertTrue(either.isRight());
 		assertNotNull(either.getOrElseThrow(ex -> new ValidationErrorException("some error message")).getInep());
 	}
@@ -74,21 +74,21 @@ public class EscolaServiceTest {
 	@Test(expected=ValidationErrorException.class)
 	public void testAdicionarComInepEmUso() {
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(true);
-		service.adicionar(escola).getOrElseThrow( ex -> new ValidationErrorException("some error message"));
+		service.adicionar(instituicao).getOrElseThrow( ex -> new ValidationErrorException("some error message"));
 	}
 	
 	@Test
 	public void testAtualizar() {
-		Either<RuntimeException, Escola> either = service.atualizar(escola,escola.getInep());
+		Either<RuntimeException, Instituicao> either = service.atualizar(instituicao,instituicao.getInep());
 		assertTrue(either.isRight());
 		assertNotNull(either.getOrElseThrow(ex -> new ValidationErrorException("some error message")).getInep());
 	}
 	
 	@Test
 	public void testAtualizarComInepSemUso() {
-		String inep = escola.getInep();
-		escola.setInep("someNewInep");
-		Either<RuntimeException, Escola> either = service.atualizar(escola,inep);
+		String inep = instituicao.getInep();
+		instituicao.setInep("someNewInep");
+		Either<RuntimeException, Instituicao> either = service.atualizar(instituicao,inep);
 		assertTrue(either.isRight());
 		assertNotNull(either.getOrElseThrow(ex -> new ValidationErrorException("some error message")).getInep());
 	}
@@ -96,7 +96,7 @@ public class EscolaServiceTest {
 	@Test(expected=ValidationErrorException.class)
 	public void testAtualizarComInepEmUso() {
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(true);
-		service.atualizar(escola,"someinep").getOrElseThrow( ex -> new ValidationErrorException("some error message"));
+		service.atualizar(instituicao,"someinep").getOrElseThrow( ex -> new ValidationErrorException("some error message"));
 	}
 	
 	@Test
@@ -105,8 +105,8 @@ public class EscolaServiceTest {
 	}
 	
 	@Test
-	public void testPesquisarEscolas() {
-		assertTrue(service.pesquisarEscolas(new EscolaFilter(), PageRequest.of(0, 10)).isPresent());
+	public void testPesquisarinstituicaos() {
+		assertTrue(service.pesquisarEscolas(new InstituicaoFilter(), PageRequest.of(0, 10)).isPresent());
 	}
 	
 }

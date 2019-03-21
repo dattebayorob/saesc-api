@@ -19,95 +19,86 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.enums.CredeEnum;
-import com.dtb.saesc.api.model.enums.PrefixoEnum;
-import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
+import com.dtb.saesc.api.model.repositories.custom.filter.InstituicaoFilter;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-public class EscolaRepositoryTest {
+public class InstituicaoRepositoryTest {
 	@Autowired
-	private EscolaRepository repository;
+	private InstituicaoRepository repository;
 	
-	private static final Log log = LogFactory.getLog(EscolaRepositoryTest.class);
+	private static final Log log = LogFactory.getLog(InstituicaoRepositoryTest.class);
 	private static final String SEARCH_CRITERIA = "FAKE";
 	private static final String SEARCH_CREDE = "SEFOR_2";
-	private static final String SEARCH_PREFIXO = "EEFM";
 
-	private EscolaFilter filter;
+	private InstituicaoFilter filter;
 	private Pageable page;
-	private Escola escola;
+	private Instituicao instituicao;
 
 	@Before
 	public void init() {
 		log.info("Instanciação e Persistencia inicial pros testes");
-		filter = new EscolaFilter();
+		filter = new InstituicaoFilter();
 		page = PageRequest.of(0, 20, Direction.ASC, "id");
-		escola = Escola
+		instituicao = Instituicao
 					.builder()
 						.crede(CredeEnum.SEFOR_2)
-						.prefixo(PrefixoEnum.EEFM)
 						.nome("FAKE ESCOLA")
 						.inep("inep_"+(int)(Math.random()*1000))
 					.build();
-		repository.save(escola);
+		repository.save(instituicao);
 	}
 	@After
 	public void finish() {
 		log.info("Removendo entidade persistida no teste");
-		repository.deleteById(escola.getId());
+		repository.deleteById(instituicao.getId());
 	}
 	@Test
 	public void testSave() {
-		assertNotNull(escola.getId());
+		assertNotNull(instituicao.getId());
 	}
 	@Test
 	public void testFindById() {
-		assertNotNull(repository.findById(escola.getId()).get());
+		assertNotNull(repository.findById(instituicao.getId()).get());
 	}
 	
 	@Test
 	public void testFindPageWithoutFilter() {
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
 		assertTrue(es.hasContent());
 	}
 	
 	@Test
 	public void testFindPageByNome() {
 		filter.setNome(SEARCH_CRITERIA);
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
 		assertTrue(es.hasContent());
 	}
 	@Test
 	public void testFindPageByCrede() {
-		filter.setPrefixo(SEARCH_CREDE);
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
-		assertTrue(es.hasContent());
-	}
-	@Test
-	public void testFindPageByPrefixo() {
-		filter.setPrefixo(SEARCH_PREFIXO);
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		filter.setCrede(SEARCH_CREDE);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
 		assertTrue(es.hasContent());
 	}
 
 	@Test
 	public void testFindPageByNomeOrCredeOrPrefixo() {
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(new EscolaFilter(SEARCH_CRITERIA, SEARCH_CREDE, SEARCH_PREFIXO), page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrPrefixo(new InstituicaoFilter(SEARCH_CRITERIA, SEARCH_CREDE), page);
 		assertTrue(es.hasContent());
 	}
 	
 	@Test
 	public void testFindPagebyNomeOrCredeOrPrefixo_WithWrongFilter() {
 		filter.setNome("NOME TRILOCAO QUE NUM VAI EXISITR");
-		Page<Escola> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrPrefixo(filter, page);
 		assertFalse(es.hasContent());
 	}
 
 	@Test
 	public void testExistsByInep() {
-		assertTrue(repository.existsByInep(escola.getInep()));
+		assertTrue(repository.existsByInep(instituicao.getInep()));
 	}
 }

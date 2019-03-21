@@ -20,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @ToString
 @Entity
-@Table(name="escola_link")
+@Table(name="instituicao_link")
 public class Link{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -32,8 +32,8 @@ public class Link{
 	private String circuito;
 	private String status;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_escola")
-	private Escola escola;
+	@JoinColumn(name="id_instituicao")
+	private Instituicao instituicao;
 	public Long getId() {
 		return id;
 	}
@@ -64,12 +64,13 @@ public class Link{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Escola getEscola() {
-		return escola;
+	public Instituicao getInstituicao() {
+		return instituicao;
 	}
-	public void setEscola(Escola escola) {
-		this.escola = escola;
+	public void setInstituicao(Instituicao instituicao) {
+		this.instituicao = instituicao;
 	}
+	
 	
 	
 }

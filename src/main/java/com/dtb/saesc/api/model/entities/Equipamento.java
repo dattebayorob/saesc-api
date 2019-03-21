@@ -30,7 +30,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "equipamento")
-public class Equipamento{
+public class Equipamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -48,8 +48,8 @@ public class Equipamento{
 	private List<EquipamentoHistorico> historico;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_escola", nullable = false)
-	private Escola escola;
+	@JoinColumn(name = "id_instituicao", nullable = false)
+	private Instituicao instituicao;
 	@Column(name = "data_criacao", nullable = false)
 	private Date dataCriacao;
 	@Column(name = "data_atualizacao")
@@ -66,9 +66,11 @@ public class Equipamento{
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
 	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -87,14 +89,6 @@ public class Equipamento{
 
 	public void setHistorico(List<EquipamentoHistorico> historico) {
 		this.historico = historico;
-	}
-
-	public Escola getEscola() {
-		return escola;
-	}
-
-	public void setEscola(Escola escola) {
-		this.escola = escola;
 	}
 
 	public EquipamentoModelo getModelo() {
@@ -120,9 +114,7 @@ public class Equipamento{
 	public void setTombamento(String tombamento) {
 		this.tombamento = tombamento;
 	}
-	
-	
-	
+
 	public EquipamentoStatus getStatus() {
 		return status;
 	}
@@ -146,6 +138,13 @@ public class Equipamento{
 	public void setDataAtualizacao(Date dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
 	}
-	
+
+	public Instituicao getInstituicao() {
+		return instituicao;
+	}
+
+	public void setInstituicao(Instituicao instituicao) {
+		this.instituicao = instituicao;
+	}
 
 }

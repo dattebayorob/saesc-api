@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.entities.Link;
 import com.dtb.saesc.api.model.entities.Provedor;
 
@@ -39,7 +39,7 @@ public class LinkRepositoryTest {
 		
 		link = Link
 				.builder()
-					.escola(Escola.builder().id(ID_ESCOLA).build())
+					.instituicao(Instituicao.builder().id(ID_ESCOLA).build())
 					.ip("172.xxx.xxx.xx1")
 					.provedor(Provedor.builder().id(Long.valueOf(1)).build())
 				.build();

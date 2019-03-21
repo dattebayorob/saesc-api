@@ -31,8 +31,8 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @ToString
 @Entity
-@Table(name = "escola")
-public class Escola{
+@Table(name = "instituicao")
+public class Instituicao{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -51,9 +51,9 @@ public class Escola{
 	private Date dataCriacao;
 	@Column(name = "data_atualizacao", nullable = false)
 	private Date dataAtualizacao;
-	@OneToMany(mappedBy = "escola", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "instituicao", fetch = FetchType.LAZY)
 	private List<Link> links;
-	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
 		
 	public Long getId() {

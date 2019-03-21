@@ -51,8 +51,8 @@ public class Funcionario implements Serializable{
 	@Column(nullable = false)
 	private PerfilEnum perfil;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_escola")
-	private Escola escola;
+	@JoinColumn(name="id_instituicao")
+	private Instituicao instituicao;
 	@Column(name="data_criacao",nullable = false)
 	private Date dataCriacao;
 	@Column(name="data_atualizacao",nullable = false)
@@ -104,12 +104,7 @@ public class Funcionario implements Serializable{
 	public void setPerfil(PerfilEnum perfil) {
 		this.perfil = perfil;
 	}
-	public Escola getEscola() {
-		return escola;
-	}
-	public void setEscola(Escola escola) {
-		this.escola = escola;
-	}
+	
 	public Date getDataCriacao() {
 		return dataCriacao;
 	}
@@ -121,6 +116,12 @@ public class Funcionario implements Serializable{
 	}
 	public void setDataAtualizacao(Date dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
+	}
+	public Instituicao getInstituicao() {
+		return instituicao;
+	}
+	public void setInstituicao(Instituicao instituicao) {
+		this.instituicao = instituicao;
 	}
 	
 }

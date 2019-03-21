@@ -7,38 +7,38 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.dtb.saesc.api.model.entities.Escola;
+import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.exceptions.ValidationErrorException;
-import com.dtb.saesc.api.model.repositories.EscolaRepository;
-import com.dtb.saesc.api.model.repositories.custom.filter.EscolaFilter;
-import com.dtb.saesc.api.services.EscolaService;
+import com.dtb.saesc.api.model.repositories.InstituicaoRepository;
+import com.dtb.saesc.api.model.repositories.custom.filter.InstituicaoFilter;
+import com.dtb.saesc.api.services.InstituicaoService;
 
 import io.vavr.control.Either;
 
 @Service
-public class EscolaServiceImpl implements EscolaService {
+public class InstituicaoServiceImpl implements InstituicaoService {
 	@Autowired
-	private EscolaRepository repository;
+	private InstituicaoRepository repository;
 
 	@Override
-	public Optional<Escola> buscarPeloId(Long id) {
+	public Optional<Instituicao> buscarPeloId(Long id) {
 		return repository.findById(id);
 	}
 
 	@Override
-	public Optional<Escola> buscarPeloInep(String inep) {
+	public Optional<Instituicao> buscarPeloInep(String inep) {
 		return repository.findByInep(inep);
 	}
 
 	@Override
-	public Either<RuntimeException, Escola> adicionar(Escola escola){
+	public Either<RuntimeException, Instituicao> adicionar(Instituicao escola){
 		
 		if(existePeloInep(escola.getInep()))
 			return Either.left(new ValidationErrorException(""));
 		return Either.right(repository.save((escola)));
 	}
 	@Override
-	public Either<RuntimeException, Escola> atualizar(Escola escola, String inep){
+	public Either<RuntimeException, Instituicao> atualizar(Instituicao escola, String inep){
 		
 		if(!escola.getInep().equals(inep) && this.existePeloInep(inep))
 			return Either.left(new ValidationErrorException(""));
@@ -46,7 +46,7 @@ public class EscolaServiceImpl implements EscolaService {
 	}
 
 	@Override
-	public Optional<Page<Escola>> pesquisarEscolas(EscolaFilter filtros, Pageable page) {
+	public Optional<Page<Instituicao>> pesquisarEscolas(InstituicaoFilter filtros, Pageable page) {
 		
 		return Optional.of(repository
 				.findPageByNomeOrCredeOrPrefixo(filtros, page)).filter(p -> p.hasContent());
