@@ -55,6 +55,8 @@ public class Instituicao{
 	private List<Link> links;
 	@OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
+	@OneToMany(mappedBy = "instituicao", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<InstituicaoAmbiente> ambientes;
 		
 	public Long getId() {
 		return id;
@@ -151,6 +153,7 @@ public class Instituicao{
 	public void setFuncionarios(List<Funcionario> funcionarios) {
 		this.funcionarios = funcionarios;
 	}
+	
 
 	@PreUpdate
 	public void preUpdate() {
@@ -162,6 +165,14 @@ public class Instituicao{
 		final Date dataAtual = new Date();
 		this.dataCriacao = dataAtual;
 		this.dataAtualizacao = dataAtual;
+	}
+
+	public List<InstituicaoAmbiente> getAmbientes() {
+		return ambientes;
+	}
+
+	public void setAmbientes(List<InstituicaoAmbiente> ambientes) {
+		this.ambientes = ambientes;
 	}
 
 }
