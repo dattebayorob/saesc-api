@@ -3,6 +3,7 @@ package com.dtb.saesc.api.model.repositories.custom.filter;
 public class InstituicaoFilter {
 	private String nome;
 	private String crede;
+	private String ip;
 	public InstituicaoFilter() {
 		// TODO Auto-generated constructor stub
 	}
@@ -24,5 +25,14 @@ public class InstituicaoFilter {
 	public void setCrede(String crede) {
 		this.crede = crede;
 	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	
 	
 }
