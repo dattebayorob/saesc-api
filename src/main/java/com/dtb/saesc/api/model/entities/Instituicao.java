@@ -18,7 +18,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.dtb.saesc.api.model.enums.CredeEnum;
-import com.dtb.saesc.api.model.enums.PrefixoEnum;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,8 +35,6 @@ public class Instituicao{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Enumerated(EnumType.STRING)
-	private PrefixoEnum prefixo;
 	@Column(nullable = false)
 	private String nome;
 	@Column(nullable = false, unique = true)
@@ -64,14 +61,6 @@ public class Instituicao{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public PrefixoEnum getPrefixo() {
-		return prefixo;
-	}
-
-	public void setPrefixo(PrefixoEnum prefixo) {
-		this.prefixo = prefixo;
 	}
 
 	public String getNome() {
