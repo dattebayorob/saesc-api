@@ -26,7 +26,7 @@ public class InstituicaoRepositoryImpl implements InstituicaoRepositoryQuery {
 	private EntityManager em;
 
 	@Override
-	public Page<Instituicao> findPageByNomeOrCredeOrPrefixo(InstituicaoFilter filter, Pageable pageable) {
+	public Page<Instituicao> findPageByNomeOrCrede(InstituicaoFilter filter, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Instituicao> criteriaQuery = criteriaBuilder.createQuery(Instituicao.class);
 		Root<Instituicao> root = criteriaQuery.from(Instituicao.class);

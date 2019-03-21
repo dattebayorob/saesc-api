@@ -50,7 +50,7 @@ public class instituicaoServiceTest {
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(instituicao));
 		BDDMockito.given(repository.findByInep(Mockito.anyString())).willReturn(Optional.of(instituicao));
 		BDDMockito.given(repository.existsByInep(Mockito.anyString())).willReturn(false);
-		BDDMockito.given(repository.findPageByNomeOrCredeOrPrefixo(Mockito.any(), Mockito.any())).
+		BDDMockito.given(repository.findPageByNomeOrCrede(Mockito.any(), Mockito.any())).
 			willReturn(new PageImpl<>(Arrays.asList(instituicao,instituicao)));
 	}
 	
