@@ -65,18 +65,18 @@ public class LinkRepositoryTest {
 	
 	@Test
 	public void testFindByEscolaId() {
-		List<Link> links = repository.findByEscolaId(ID_ESCOLA);
+		List<Link> links = repository.findByInstituicaoId(ID_ESCOLA);
 		assertTrue(!links.isEmpty());
 	}
 	
 	@Test
 	public void testFindAllByIp() {
-		List<Link> links = repository.findAllByIp(IP);
+		List<Link> links = repository.findByIp(IP);
 		assertTrue(!links.isEmpty());
 	}
 	@Test
 	public void testFindAllByIpWithWrongIp() {
-		List<Link> links = repository.findAllByIp("Num_vai_ter_nada");
+		List<Link> links = repository.findByIp("Num_vai_ter_nada");
 		assertTrue(links.isEmpty());
 	}
 }

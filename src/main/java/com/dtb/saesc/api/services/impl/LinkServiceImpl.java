@@ -18,12 +18,12 @@ public class LinkServiceImpl implements LinkService {
 
 	@Override
 	public Optional<List<Link>> buscarPorescola(Long id) {
-		return Optional.of(repository.findByEscolaId(id)).filter(l -> !l.isEmpty());
+		return Optional.of(repository.findByInstituicaoId(id)).filter(l -> !l.isEmpty());
 	}
 
 	@Override
 	public Optional<List<Link>> buscarLinks(String ip) {
-		return Optional.of(repository.findAllByIp(ip)).filter(l -> !l.isEmpty());
+		return Optional.of(repository.findByIp(ip)).filter(l -> !l.isEmpty());
 	}
 
 }

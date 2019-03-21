@@ -35,9 +35,9 @@ public class LinkServiceTest {
 	
 	@Before
 	public void init() {
-		BDDMockito.given(repository.findAllByIp(Mockito.anyString())).willReturn
+		BDDMockito.given(repository.findByIp(Mockito.anyString())).willReturn
 			(Arrays.asList(Link.builder().build(),Link.builder().build()));
-		BDDMockito.given(repository.findByEscolaId(Mockito.anyLong())).willReturn
+		BDDMockito.given(repository.findByInstituicaoId(Mockito.anyLong())).willReturn
 			(Arrays.asList(Link.builder().build(),Link.builder().build()));
 	}
 	
@@ -53,7 +53,7 @@ public class LinkServiceTest {
 	
 	@Test
 	public void testBuscarPorEscolaRetornandoNulo() {
-		BDDMockito.given(repository.findByEscolaId(Mockito.anyLong())).willReturn(new ArrayList<>());
+		BDDMockito.given(repository.findByInstituicaoId(Mockito.anyLong())).willReturn(new ArrayList<>());
 		assertFalse(service.buscarPorescola(Long.valueOf(1)).isPresent());
 	}
 }
