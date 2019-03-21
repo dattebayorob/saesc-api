@@ -22,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @ToString
 @Entity
-@Table(name="link_provedor")
+@Table(name="provedor")
 public class Provedor{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
