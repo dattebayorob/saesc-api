@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.util.StringUtils;
 
 import com.dtb.saesc.api.model.entities.Instituicao;
@@ -31,6 +32,7 @@ public class InstituicaoRepositoryImpl implements InstituicaoRepositoryQuery {
 		Root<Instituicao> root = criteriaQuery.from(Instituicao.class);
 		Predicate[] p = generatePredicates(filter, criteriaBuilder, root);
 		criteriaQuery.where(p);
+		criteriaQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), root, criteriaBuilder));
 		List<Instituicao> escolas = em.createQuery(criteriaQuery).setFirstResult((int) pageable.getOffset())
 				.setMaxResults(pageable.getPageSize()).getResultList();
 		return new PageImpl<>(escolas, pageable, escolas.size());
