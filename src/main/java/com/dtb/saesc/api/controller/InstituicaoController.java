@@ -28,7 +28,7 @@ import com.dtb.saesc.api.model.response.impl.ResponseError;
 import com.dtb.saesc.api.services.InstituicaoService;
 
 @RestController
-@RequestMapping(value = "/escolas")
+@RequestMapping(value = "/instituicoes")
 @CrossOrigin(value = "*")
 public class InstituicaoController {
 	@Autowired
@@ -40,7 +40,6 @@ public class InstituicaoController {
 
 	@GetMapping
 	public ResponseEntity<Response> pesquisarInstituicaos(InstituicaoFilter filtros, Pageable page) {
-		
 		Page<Instituicao> escolas = service.pesquisarEscolas(filtros, page)
 				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.PESQUISA_SEM_RESULTADOS));
 		return ResponseEntity.ok(
