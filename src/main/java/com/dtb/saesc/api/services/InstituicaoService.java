@@ -22,5 +22,5 @@ public interface InstituicaoService {
 
 	public Either<RuntimeException, Instituicao> atualizar(Instituicao escola, String inep);
 
-	public Optional<Page<Instituicao>> pesquisarEscolas(InstituicaoFilter filtros, Pageable page);
+	public Optional<Page<Instituicao>> pesquisar(InstituicaoFilter filtros, Pageable page);
 }
