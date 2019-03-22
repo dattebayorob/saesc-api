@@ -67,33 +67,33 @@ public class InstituicaoRepositoryTest {
 	
 	@Test
 	public void testFindPageWithoutFilter() {
-		Page<Instituicao> es = repository.findPageByNomeOrCrede(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(filter, page);
 		assertTrue(es.hasContent());
 	}
 	
 	@Test
 	public void testFindPageByNome() {
 		filter.setNome(SEARCH_CRITERIA);
-		Page<Instituicao> es = repository.findPageByNomeOrCrede(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(filter, page);
 		assertTrue(es.hasContent());
 	}
 	@Test
 	public void testFindPageByCrede() {
 		filter.setCrede(SEARCH_CREDE);
-		Page<Instituicao> es = repository.findPageByNomeOrCrede(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(filter, page);
 		assertTrue(es.hasContent());
 	}
 
 	@Test
 	public void testFindPageByNomeOrCredeOrPrefixo() {
-		Page<Instituicao> es = repository.findPageByNomeOrCrede(new InstituicaoFilter(SEARCH_CRITERIA, SEARCH_CREDE), page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(new InstituicaoFilter(SEARCH_CRITERIA, SEARCH_CREDE), page);
 		assertTrue(es.hasContent());
 	}
 	
 	@Test
 	public void testFindPagebyNomeOrCredeOrPrefixo_WithWrongFilter() {
 		filter.setNome("NOME TRILOCAO QUE NUM VAI EXISITR");
-		Page<Instituicao> es = repository.findPageByNomeOrCrede(filter, page);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(filter, page);
 		assertFalse(es.hasContent());
 	}
 
