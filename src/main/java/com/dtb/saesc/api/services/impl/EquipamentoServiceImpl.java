@@ -44,7 +44,7 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	public Optional<Page<Equipamento>> buscarPaginaPorFiltros(EquipamentoFilter filter, Pageable pageable) {
 		return Optional
 				.of(repository.findPageByDescricaoOrModeloOrStatusOrSerialOrTombamento(filter, pageable))
-				.filter(p -> p.hasContent());
+				.filter(Page::hasContent);
 	}
 
 }

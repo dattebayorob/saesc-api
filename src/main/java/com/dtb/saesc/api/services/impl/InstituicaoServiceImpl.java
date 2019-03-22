@@ -49,7 +49,7 @@ public class InstituicaoServiceImpl implements InstituicaoService {
 	public Optional<Page<Instituicao>> pesquisar(InstituicaoFilter filtros, Pageable page) {
 		
 		return Optional.of(repository
-				.findPageByNomeOrCredeOrIp(filtros, page)).filter(p -> p.hasContent());
+				.findPageByNomeOrCredeOrIp(filtros, page)).filter(Page::hasContent);
 	}
 
 	@Override
