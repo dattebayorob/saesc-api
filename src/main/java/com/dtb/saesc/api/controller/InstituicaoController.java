@@ -20,7 +20,7 @@ import com.dtb.saesc.api.model.dtos.InstituicaoDto;
 import com.dtb.saesc.api.model.dtos.InstituicaoResumidoDto;
 import com.dtb.saesc.api.model.entities.Instituicao;
 import com.dtb.saesc.api.model.exceptions.ResourceNotFoundException;
-import com.dtb.saesc.api.model.exceptions.messages.EscolaMessages;
+import com.dtb.saesc.api.model.exceptions.messages.InstituicaoMessages;
 import com.dtb.saesc.api.model.repositories.custom.filter.InstituicaoFilter;
 import com.dtb.saesc.api.model.response.Response;
 import com.dtb.saesc.api.model.response.impl.ResponseData;
@@ -41,7 +41,7 @@ public class InstituicaoController {
 	@GetMapping
 	public ResponseEntity<Response> pesquisarInstituicaos(InstituicaoFilter filtros, Pageable page) {
 		Page<Instituicao> instituicoes = service.pesquisar(filtros, page)
-				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.PESQUISA_SEM_RESULTADOS));
+				.orElseThrow(() -> new ResourceNotFoundException(InstituicaoMessages.PESQUISA_POR_FILTRO_NULA));
 		return ResponseEntity.ok(
 				ResponseData.data(
 						converterResumido.toDto(InstituicaoResumidoDto.class).convert(instituicoes)
@@ -54,7 +54,7 @@ public class InstituicaoController {
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		
 		Instituicao instituicao = service.buscarPeloId(id)
-				.orElseThrow(()-> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
+				.orElseThrow(()-> new ResourceNotFoundException(InstituicaoMessages.PESQUISA_POR_ID_NULA));
 		return ResponseEntity.ok(
 				ResponseData.data(
 						converter.toDto(InstituicaoDto.class).convert(instituicao)
@@ -81,7 +81,7 @@ public class InstituicaoController {
 	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Validated @RequestBody InstituicaoDto dto){
 		
 		Instituicao instituicao = service.buscarPeloId(id)
-				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
+				.orElseThrow(() -> new ResourceNotFoundException(InstituicaoMessages.PESQUISA_POR_ID_NULA));
 		String inep = instituicao.getInep();
 		dto.setId(id);
 		return ResponseEntity.ok(
