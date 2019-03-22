@@ -33,6 +33,7 @@ public class InstituicaoRepositoryTest {
 	private static final Log log = LogFactory.getLog(InstituicaoRepositoryTest.class);
 	private static final String SEARCH_CRITERIA = "FAKE";
 	private static final String SEARCH_CREDE = "SEFOR_2";
+	private static final String IP = "200.217.200.xxx";
 
 	private InstituicaoFilter filter;
 	private Pageable page;
@@ -85,8 +86,9 @@ public class InstituicaoRepositoryTest {
 	}
 
 	@Test
-	public void testFindPageByNomeOrCredeOrPrefixo() {
-		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(new InstituicaoFilter(SEARCH_CRITERIA, SEARCH_CREDE), page);
+	public void testFindPageByIp() {
+		filter.setIp(IP);
+		Page<Instituicao> es = repository.findPageByNomeOrCredeOrIp(filter, page);
 		assertTrue(es.hasContent());
 	}
 	
