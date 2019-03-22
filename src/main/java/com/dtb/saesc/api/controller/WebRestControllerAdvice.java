@@ -22,11 +22,12 @@ import com.dtb.saesc.api.model.response.impl.ResponseError;
 public class WebRestControllerAdvice {
 
 	private static final Logger log = LoggerFactory.getLogger(WebRestControllerAdvice.class);
+	private static final String INFO_MESSAGE = "Handle Exception: {}";
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public Response handleResourceNotFoundException(ResourceNotFoundException ex) {
-		log.info("Handle Exception: {}", ex.getMessage());
+		log.info(INFO_MESSAGE, ex.getMessage());
 
 		return ResponseError.error().add(ex.getMessage()).build();
 	}
@@ -34,7 +35,7 @@ public class WebRestControllerAdvice {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public Response handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		log.info("Handle Exception: {}", ex.getBindingResult().getAllErrors().stream()
+		log.info(INFO_MESSAGE, ex.getBindingResult().getAllErrors().stream()
 				.map(ObjectError::getDefaultMessage).collect(Collectors.toList()).toString());
 
 		return ResponseError.error().list(ex.getBindingResult().getAllErrors()).build();
@@ -43,7 +44,7 @@ public class WebRestControllerAdvice {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-		log.info("Handle Exception: {} ", ex.getMessage());
+		log.info(INFO_MESSAGE, ex.getMessage());
 
 		return ResponseError.error().add(ExceptionHandlerMessages.REQUIRED_REQUEST_BODY).build();
 	}
@@ -51,7 +52,7 @@ public class WebRestControllerAdvice {
 	@ExceptionHandler(ValidationErrorException.class)
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public Response handleValidationErrorsException(ValidationErrorException ex) {
-		log.info("Handle Exception: {}", ex.getMessage());
+		log.info(INFO_MESSAGE, ex.getMessage());
 
 		return ResponseError.error().add(ex.getMessage()).build();
 	}
