@@ -28,7 +28,6 @@ public class LinkRepositoryTest {
 	private Link link;
 	private static final Log log = LogFactory.getLog(LinkRepositoryTest.class);
 	private static final Long ID_ESCOLA = Long.valueOf(1);
-	private static final String IP = "172"; // If null, all links will be returned.
 	
 	@Before
 	public void init() {
