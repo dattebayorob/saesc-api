@@ -27,33 +27,40 @@ public class InstituicaoRepositoryImpl implements InstituicaoRepositoryQuery {
 
 	@Override
 	public Page<Instituicao> findPageByNomeOrCredeOrIp(InstituicaoFilter filter, Pageable pageable) {
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<Instituicao> criteriaQuery = criteriaBuilder.createQuery(Instituicao.class);
-		Root<Instituicao> root = criteriaQuery.from(Instituicao.class);
-		Predicate[] p = generatePredicates(filter, criteriaBuilder, root);
-		criteriaQuery.where(p);
-		criteriaQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), root, criteriaBuilder));
-		List<Instituicao> escolas = em.createQuery(criteriaQuery).setFirstResult((int) pageable.getOffset())
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+		CriteriaQuery<Instituicao> cq = cb.createQuery(Instituicao.class);
+		
+		Root<Instituicao> root = cq.from(Instituicao.class);
+		
+		cq.where(generatePredicates(filter, cb, root));
+		
+		cq.orderBy(QueryUtils.toOrders(pageable.getSort(), root, cb));
+		
+		List<Instituicao> instituicoes = em.createQuery(cq).setFirstResult((int) pageable.getOffset())
 				.setMaxResults(pageable.getPageSize()).getResultList();
-		return new PageImpl<>(escolas, pageable, escolas.size());
+		return new PageImpl<>(instituicoes, pageable, instituicoes.size());
 	}
 
-	private Predicate[] generatePredicates(InstituicaoFilter filter, CriteriaBuilder criteriaBuilder, Root<Instituicao> root) {
+	private Predicate[] generatePredicates(InstituicaoFilter filter, CriteriaBuilder cb, Root<Instituicao> root) {
 		List<Predicate> predicates = new ArrayList<>();
+		
 		if (!StringUtils.isEmpty(filter.getNome())) {
-			predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")),
+			predicates.add(cb.like(cb.lower(root.get("nome")),
 					"%" + filter.getNome().toLowerCase() + "%"));
 		}
+		
 		if (filter.getCrede() != null) {
 			predicates
-					.add(criteriaBuilder.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
+					.add(cb.equal(root.get("crede"), CredeEnum.valueOf(filter.getCrede().toUpperCase())));
 		}
+		
 		if(!StringUtils.isEmpty(filter.getIp())) {
 			predicates
-					.add(criteriaBuilder.like(root.join("links").get("ip"), "%" + filter.getIp() + "%"));
+					.add(cb.like(root.join("links").get("ip"), "%" + filter.getIp() + "%"));
 		}
-		Predicate[] p = predicates.toArray(new Predicate[predicates.size()]);
-		return p;
+		
+		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
 }
