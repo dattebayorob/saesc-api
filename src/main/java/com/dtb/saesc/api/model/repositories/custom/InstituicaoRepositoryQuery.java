@@ -8,5 +8,5 @@ import com.dtb.saesc.api.model.repositories.custom.filter.InstituicaoFilter;
 
 public interface InstituicaoRepositoryQuery {
 
-	Page<Instituicao> findPageByNomeOrCrede(InstituicaoFilter filter, Pageable pageable);
+	Page<Instituicao> findPageByNomeOrCredeOrIp(InstituicaoFilter filter, Pageable pageable);
 }
