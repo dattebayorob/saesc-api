@@ -40,11 +40,11 @@ public class InstituicaoController {
 
 	@GetMapping
 	public ResponseEntity<Response> pesquisarInstituicaos(InstituicaoFilter filtros, Pageable page) {
-		Page<Instituicao> escolas = service.pesquisarEscolas(filtros, page)
+		Page<Instituicao> instituicoes = service.pesquisar(filtros, page)
 				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.PESQUISA_SEM_RESULTADOS));
 		return ResponseEntity.ok(
 				ResponseData.data(
-						converterResumido.toDto(InstituicaoResumidoDto.class).convert(escolas)
+						converterResumido.toDto(InstituicaoResumidoDto.class).convert(instituicoes)
 						)
 				);
 
@@ -53,11 +53,11 @@ public class InstituicaoController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> buscarPeloId(@PathVariable("id") Long id) {
 		
-		Instituicao escola = service.buscarPeloId(id)
+		Instituicao instituicao = service.buscarPeloId(id)
 				.orElseThrow(()-> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
 		return ResponseEntity.ok(
 				ResponseData.data(
-						converter.toDto(InstituicaoDto.class).convert(escola)
+						converter.toDto(InstituicaoDto.class).convert(instituicao)
 						)
 				);
 
@@ -66,11 +66,11 @@ public class InstituicaoController {
 	@PostMapping
 	public ResponseEntity<Response> adicionar(@Validated @RequestBody InstituicaoDto dto) {
 		
-		Instituicao escola = converter.toEntity(Instituicao.class).convert(dto);
+		Instituicao instituicao = converter.toEntity(Instituicao.class).convert(dto);
 		
 		return new ResponseEntity<>(
 				ResponseData.data(
-						service.adicionar(escola).fold(ResponseError::exception,
+						service.adicionar(instituicao).fold(ResponseError::exception,
 								e ->converter.toDto(InstituicaoDto.class).convert(e))
 						),HttpStatus.CREATED
 				);
@@ -80,15 +80,15 @@ public class InstituicaoController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> atualizar(@PathVariable("id") Long id, @Validated @RequestBody InstituicaoDto dto){
 		
-		Instituicao escola = service.buscarPeloId(id)
+		Instituicao instituicao = service.buscarPeloId(id)
 				.orElseThrow(() -> new ResourceNotFoundException(EscolaMessages.ESCOLA_NAO_ENCONTRADA));
-		String inep = escola.getInep();
+		String inep = instituicao.getInep();
 		dto.setId(id);
 		return ResponseEntity.ok(
 				ResponseData.data(
 						service.atualizar(
 								converter
-								.toEntity(escola)
+								.toEntity(instituicao)
 								.convert(dto), inep)
 						.fold(ResponseError::exception,
 								e -> converter.toDto(InstituicaoDto.class).convert(e))
