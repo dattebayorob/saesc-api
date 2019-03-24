@@ -13,8 +13,8 @@ public class LinkDto {
 	private String circuito;
 	private String status;
 	@NotNull(message = "Escola deve ser informada.")
-	private long escolaId;
-	private String escolaNome;
+	private Long instituicaoId;
+	private String instituicaoNome;
 
 	public Long getId() {
 		return id;
@@ -64,20 +64,22 @@ public class LinkDto {
 		this.status = status;
 	}
 
-	public long getEscolaId() {
-		return escolaId;
+	public Long getInstituicaoId() {
+		return instituicaoId;
 	}
 
-	public void setEscolaId(long escolaId) {
-		this.escolaId = escolaId;
+	public void setInstituicaoId(Long instituicaoId) {
+		this.instituicaoId = instituicaoId;
 	}
 
-	public String getEscolaNome() {
-		return escolaNome;
+	public String getInstituicaoNome() {
+		return instituicaoNome;
 	}
 
-	public void setEscolaNome(String escolaNome) {
-		this.escolaNome = escolaNome;
+	public void setInstituicaoNome(String instituicaoNome) {
+		this.instituicaoNome = instituicaoNome;
 	}
+	
+	
 
 }
