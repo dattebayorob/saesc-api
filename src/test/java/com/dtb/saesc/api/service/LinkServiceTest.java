@@ -1,6 +1,7 @@
 package com.dtb.saesc.api.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
@@ -51,5 +52,13 @@ public class LinkServiceTest {
 		Either<RuntimeException, Link> link = service.adicionar(Link.builder().build());
 		assertTrue(link.isRight());
 		assertEquals(link.getOrElse(Link.builder().build()).getId(), this.link.getId());
+	}
+	
+	@Test
+	public void buscarPeloId() {
+		Optional<Link> link = service.buscarPeloId(Long.valueOf(1));
+		assertTrue(link.isPresent());
+		assertNotNull(link.get().getId());
+		assertEquals(link.get().getId(), this.link.getId());
 	}
 }

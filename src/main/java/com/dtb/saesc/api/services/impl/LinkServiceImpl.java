@@ -1,5 +1,7 @@
 package com.dtb.saesc.api.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,11 @@ public class LinkServiceImpl implements LinkService {
 	@Override
 	public Either<RuntimeException, Link> adicionar(Link link){
 		return Either.right(repository.save(link));
+	}
+
+	@Override
+	public Optional<Link> buscarPeloId(Long id) {
+		return repository.findById(id);
 	}
 
 }
