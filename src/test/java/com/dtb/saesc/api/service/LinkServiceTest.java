@@ -56,6 +56,26 @@ public class LinkServiceTest {
 	}
 	
 	@Test
+	public void testAtualizar() {
+		this.link.setStatus("Me falaram que a Penha é o bixo");
+		Either<RuntimeException, Link> link = service.atualizar(this.link, this.link.getIp());
+		assertTrue(link.isRight());
+	}
+	
+	@Test
+	public void testAtualizarComIpSemUso() {
+		BDDMockito.given(repository.findByIpAndProvedor(Mockito.anyString(), Mockito.any())).willReturn(Optional.empty());
+		Either<RuntimeException, Link> link = service.atualizar(this.link, "172.24.xxx.yyy");
+		assertTrue(link.isRight());
+	}
+	
+	@Test
+	public void testAtualizarComIpEmUso() {
+		Either<RuntimeException, Link> link = service.atualizar(this.link, "200.217.200.xxx");
+		assertTrue(link.isLeft());
+	}
+	
+	@Test
 	public void buscarPeloId() {
 		Optional<Link> link = service.buscarPeloId(Long.valueOf(1));
 		assertTrue(link.isPresent());
