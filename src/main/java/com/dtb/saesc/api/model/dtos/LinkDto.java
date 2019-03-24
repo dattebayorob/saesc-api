@@ -1,17 +1,18 @@
 package com.dtb.saesc.api.model.dtos;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-public class LinkDto{
+public class LinkDto {
 
 	private Long id;
-	@NotEmpty(message = "Endereço ip do link deve ser informado.")
+	@NotNull(message = "Endereço ip do link deve ser informado.")
 	private String ip;
-	@NotEmpty(message = "Provedor deve ser informado.")
+	@NotNull(message = "Provedor deve ser informado.")
+	private Long provedorId;
 	private String provedorNome;
 	private String circuito;
 	private String status;
-	@NotEmpty(message = "Escola deve ser informada.")
+	@NotNull(message = "Escola deve ser informada.")
 	private long escolaId;
 	private String escolaNome;
 
@@ -29,6 +30,14 @@ public class LinkDto{
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public Long getProvedorId() {
+		return provedorId;
+	}
+
+	public void setProvedorId(Long provedorId) {
+		this.provedorId = provedorId;
 	}
 
 	public String getProvedorNome() {
@@ -70,6 +79,5 @@ public class LinkDto{
 	public void setEscolaNome(String escolaNome) {
 		this.escolaNome = escolaNome;
 	}
-	
 
 }
