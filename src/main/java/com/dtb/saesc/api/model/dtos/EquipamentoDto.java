@@ -11,8 +11,8 @@ public class EquipamentoDto{
 	private String modeloNome;
 	private Long modeloMarcaId;
 	private String modeloMarcaNome;
-	private Long escolaId;
-	private String escolaNome;
+	private Long instituicaoId;
+	private String instituicaoNome;
 	private String statusNome;
 	private List<EquipamentoHistoricoDto> historico;
 
@@ -72,20 +72,20 @@ public class EquipamentoDto{
 		this.modeloMarcaNome = modeloMarcaNome;
 	}
 
-	public Long getEscolaId() {
-		return escolaId;
+	public Long getInstituicaoId() {
+		return instituicaoId;
 	}
 
-	public void setEscolaId(Long escolaId) {
-		this.escolaId = escolaId;
+	public void setInstituicaoId(Long instituicaoId) {
+		this.instituicaoId = instituicaoId;
 	}
 
-	public String getEscolaNome() {
-		return escolaNome;
+	public String getInstituicaoNome() {
+		return instituicaoNome;
 	}
 
-	public void setEscolaNome(String escolaNome) {
-		this.escolaNome = escolaNome;
+	public void setInstituicaoNome(String instituicaoNome) {
+		this.instituicaoNome = instituicaoNome;
 	}
 
 	public String getStatusNome() {

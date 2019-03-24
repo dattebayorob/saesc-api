@@ -11,8 +11,8 @@ public class EquipamentoCadastroDto {
 	private String descricao;
 	@NotNull(message = "Modelo deve ser informado.")
 	private Long modeloId;
-	@NotNull(message = "Escola deve ser informada.")
-	private Long escolaId;
+	@NotNull(message = "Instituicao deve ser informada.")
+	private Long instituicaoId;
 	@NotNull(message = "Status do equipamento deve ser informado.")
 	private Long statusId;
 	private String comentario;
@@ -41,12 +41,12 @@ public class EquipamentoCadastroDto {
 		this.modeloId = modeloId;
 	}
 
-	public Long getEscolaId() {
-		return escolaId;
+	public Long getInstituicaoId() {
+		return instituicaoId;
 	}
 
-	public void setEscolaId(Long escolaId) {
-		this.escolaId = escolaId;
+	public void setInstituicaoId(Long instituicaoId) {
+		this.instituicaoId = instituicaoId;
 	}
 
 	public Long getStatusId() {
