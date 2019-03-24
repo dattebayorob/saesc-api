@@ -32,7 +32,7 @@ public class LinkServiceImpl implements LinkService {
 
 	@Override
 	public Either<RuntimeException, Link> atualizar(Link link, String ip) {
-		if(! link.getIp().equals(ip) && buscarPeloIpEProvedor(ip, link.getProvedor()).isPresent())
+		if(! link.getIp().equals(ip) && buscarPeloIpEProvedor(link.getIp(), link.getProvedor()).isPresent())
 			return Either.left(new ValidationErrorException(LinkMessages.IP_JA_CADASTRADO));
 		return Either.right(repository.save(link));
 	}
