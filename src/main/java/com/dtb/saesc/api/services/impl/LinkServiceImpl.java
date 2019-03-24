@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dtb.saesc.api.model.entities.Link;
+import com.dtb.saesc.api.model.entities.Provedor;
+import com.dtb.saesc.api.model.exceptions.ValidationErrorException;
+import com.dtb.saesc.api.model.exceptions.messages.LinkMessages;
 import com.dtb.saesc.api.model.repositories.LinkRepository;
 import com.dtb.saesc.api.services.LinkService;
 
@@ -25,6 +28,18 @@ public class LinkServiceImpl implements LinkService {
 	@Override
 	public Optional<Link> buscarPeloId(Long id) {
 		return repository.findById(id);
+	}
+
+	@Override
+	public Either<RuntimeException, Link> atualizar(Link link, String ip) {
+		if(! link.getIp().equals(ip) && buscarPeloIpEProvedor(ip, link.getProvedor()).isPresent())
+			return Either.left(new ValidationErrorException(LinkMessages.IP_JA_CADASTRADO));
+		return Either.right(link);
+	}
+
+	@Override
+	public Optional<Link> buscarPeloIpEProvedor(String ip, Provedor provedor) {
+		return repository.findByIpAndProvedor(ip, provedor);
 	}
 
 }

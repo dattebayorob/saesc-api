@@ -45,6 +45,7 @@ public class LinkServiceTest {
 			.build();
 		BDDMockito.given(repository.findById(Mockito.anyLong())).willReturn(Optional.of(link));
 		BDDMockito.given(repository.save(Mockito.any())).willReturn(link);
+		BDDMockito.given(repository.findByIpAndProvedor(Mockito.anyString(), Mockito.any())).willReturn(Optional.of(link));
 	}
 	
 	@Test
@@ -60,5 +61,11 @@ public class LinkServiceTest {
 		assertTrue(link.isPresent());
 		assertNotNull(link.get().getId());
 		assertEquals(link.get().getId(), this.link.getId());
+	}
+	
+	@Test
+	public void BuscarPeloIpEProvedor() {
+		Optional<Link> link = service.buscarPeloIpEProvedor(this.link.getIp(), this.link.getProvedor());
+		assertTrue(link.isPresent());
 	}
 }
