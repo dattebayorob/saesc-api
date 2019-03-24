@@ -34,7 +34,7 @@ public class LinkServiceImpl implements LinkService {
 	public Either<RuntimeException, Link> atualizar(Link link, String ip) {
 		if(! link.getIp().equals(ip) && buscarPeloIpEProvedor(ip, link.getProvedor()).isPresent())
 			return Either.left(new ValidationErrorException(LinkMessages.IP_JA_CADASTRADO));
-		return Either.right(link);
+		return Either.right(repository.save(link));
 	}
 
 	@Override
